@@ -1,0 +1,14 @@
+.navbar > * {
+  list-style: none;
+  text-decoration: none;
+  color: black;
+  text-transform: capitalize;
+  border-radius: 10px;
+  padding: 5px 10px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
