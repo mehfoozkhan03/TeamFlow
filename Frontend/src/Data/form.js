@@ -40,16 +40,44 @@ export const signup = [
   },
   {
     id: 4,
-    name: "mehfooz",
-    type: "text",
-    placeholder: "enter you'r mehfooz...",
+    name: "dob",
+    type: "date",
   },
   {
     id: 5,
-    name: "khushi",
-    type: "text",
-    placeholder: "enter you'r khushi...",
+    name: "phone",
+    type: "tel",
+    placeholder: "enter you'r phone...",
+  },
+  {
+    id: 6,
+    name: "gender",
+    typeOfGender: {
+      male: {
+        type: "radio",
+        name: "male",
+      },
+      female: {
+        type: "radio",
+        name: "female",
+      },
+      other: {
+        type: "radio",
+        name: "other",
+      },
+    },
   },
 ];
+
+/* 
+{
+name ..,
+dob ..,
+gender,
+email ..,
+password ..,
+phone ..
+}
+*/
 
 export const admin = [];
