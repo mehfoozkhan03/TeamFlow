@@ -32,4 +32,16 @@ const Signup = async (req, res) => {
   });
 };
 
-module.exports = { Signup };
+const Login = () => {
+  // login logic
+
+
+  /* 
+  client side
+
+
+  server side   
+  */
+};
+
+module.exports = { Signup, Login };

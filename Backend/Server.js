@@ -1,5 +1,7 @@
 const express = require("express");
 
+const cors = require("cors");
+
 require("dotenv").config();
 
 const { UserRoutes } = require("./Router/User.routes");
@@ -9,11 +11,17 @@ const app = express();
 
 app.use(express.json());
 
+app.use(
+  cors({
+    origin: ["*", "http://localhost:5173", "http://localhost:5174"],
+  }),
+);
+
 app.get("/", (req, res) => {
   res.send("this is server page data????");
 });
 
-app.use("/user",UserRoutes);
+app.use("/user", UserRoutes);
 
 app.listen(process.env.Port, async () => {
   try {

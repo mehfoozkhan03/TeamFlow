@@ -1,6 +1,9 @@
 import React from "react";
 
+import { ApiCall } from "../Api/ApiCall";
 import "../Style/Form.css";
+import { useLocation } from "react-router-dom";
+
 /* 
 {
 name:"nfg",
@@ -10,6 +13,12 @@ password:"nfgfr"
 */
 
 export const Form = ({ props, button }) => {
+
+  const location= useLocation();
+
+
+  console.log(location)
+
   const [form, setForm] = React.useState(() => {
     return props.reduce((acc, curr) => {
       acc[curr.name] = "";
@@ -19,8 +28,6 @@ export const Form = ({ props, button }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // console.log("name: ", name, "value: ", value);
-    // console.log("e", e);
     setForm((prev) => {
       return {
         ...prev,
@@ -29,9 +36,15 @@ export const Form = ({ props, button }) => {
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = await ApiCall.post(`/user/${location.pathname}`, form);
+    console.log("data", data);
+  };
+
   console.log(form);
   return (
-    <form className="form">
+    <form className="form" onSubmit={(e) => handleSubmit(e)}>
       {props?.map((el) => (
         <div key={el.id}>
           {el.name != "gender" ? (
@@ -63,7 +76,7 @@ export const Form = ({ props, button }) => {
                         <input
                           name={el.name}
                           type={value.type}
-                          value={key}
+                          value={key.replace(/\b\w/g, char => char.toUpperCase())}
                           onChange={(e) => handleChange(e)}
                         />
                       </div>
@@ -80,7 +93,7 @@ export const Form = ({ props, button }) => {
           )}
         </div>
       ))}
-      <button>{button}</button>
+      <button type="submit">{button}</button>
     </form>
   );
 };

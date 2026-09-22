@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { Signup } = require("../Controller/Users.Controller");
+const { Signup, Login } = require("../Controller/Users.Controller");
 
 const UserRoutes = express.Router();
 
@@ -12,9 +12,13 @@ UserRoutes.get("/", (req, res) => {
 /* 
 path : /user/signup
 
+url http://localhost:7000//user/signup
 */
 
 // signup data
 UserRoutes.post("/signup", Signup);
+
+// login
+UserRoutes.post("/login", Login);
 
 module.exports = { UserRoutes };
