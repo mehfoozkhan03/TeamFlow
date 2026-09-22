@@ -20,7 +20,14 @@ export const Signup = () => {
       name:"password",
       type:"password",
       placeholder:"enter you'r password..."
+    },
+    {
+      id:4,
+      name:"contact",
+      type:"contact",
+      placeholder:"enter you'r contact..."
     }
+   
   ]
   return (
    <Form props={data} button="signup"/>

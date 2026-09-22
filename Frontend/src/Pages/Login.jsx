@@ -7,7 +7,7 @@ export const Login = () => {
       id:1,
       name:"name",
       type:"text",
-      placeholder:"enter you'r name..."
+      placeholder:"enter you'r name..." 
     },
     {
       id:2,
