@@ -1,14 +1,112 @@
-.form{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 500px;
-    gap: 10px;
+.form {
+  width: 100%;
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 35px;
+  box-sizing: border-box;
+
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.form>div{
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+  text-transform: capitalize;
+}
+
+/* Name */
+#input-1 {
+  width: 100%;
+  padding: 12px 14px;
+  box-sizing: border-box;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+/* Email */
+#input-2 {
+  width: 100%;
+  padding: 12px 14px;
+  box-sizing: border-box;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+/* Password */
+
+#input-3 {
+  width: 100%;
+  padding: 12px 14px;
+  box-sizing: border-box;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+/* Focus effect */
+#input-1:focus,
+#input-2:focus,
+#input-3:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+/* Placeholder */
+#input-1::placeholder,
+#input-2::placeholder,
+#input-3::placeholder {
+  color: #9ca3af;
+}
+
+/* Signup/Login button */
+.form button {
+  width: 100%;
+  padding: 12px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #6366f1;
+  color: white;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.form button:hover {
+  background: #4f46e5;
+}
+
+.form button:active {
+  transform: scale(0.98);
 }
