@@ -38,7 +38,7 @@ export const Form = ({ props, button }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = await ApiCall.post(`/user/${location.pathname}`, form);
+    const data = await ApiCall.post(`/user${location.pathname}`, form);
     console.log("data", data);
   };
 

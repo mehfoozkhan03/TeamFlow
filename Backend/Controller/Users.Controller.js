@@ -32,16 +32,27 @@ const Signup = async (req, res) => {
   });
 };
 
-const Login = () => {
-  // login logic
+const Login = (req, res) => {
+  const data = req.body;
+
+  console.log("data", data);
 
 
-  /* 
-  client side
+  if (!data) {
+    res.send({ msg: "please provide data" });
+    return;
+  }
+
+  const presentUser = UserModel.findOne({ email: data.email });
+
+  console.log("presentUser", presentUser);
 
 
-  server side   
-  */
+  // res.send({ msg: "login page", data: data });
+
+  
+ 
+
 };
 
 module.exports = { Signup, Login };
