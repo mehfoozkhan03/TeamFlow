@@ -1,7 +1,8 @@
 const { UserModel } = require("../Model/User.model");
 require("dotenv").config({});
 
-const { genSalt, hash } = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { genSalt, hash, compare } = require("bcrypt");
 
 // signup -> DB
 
@@ -32,27 +33,50 @@ const Signup = async (req, res) => {
   });
 };
 
-const Login = (req, res) => {
-  const data = req.body;
+const Login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log("email", email, "plainPass", password);
 
-  console.log("data", data);
+    if (!email || !password) {
+      res.send({ msg: "please provide data and correct credential" });
+      return;
+    }
 
+    const presentUser = await UserModel.findOne({ email: email });
 
-  if (!data) {
-    res.send({ msg: "please provide data" });
-    return;
+    if (presentUser.length > 0 || presentUser) {
+      // console.log("presentUser", presentUser);
+
+      // login
+
+      const encPass = presentUser.password;
+      console.log("encPass", encPass, "myPaass", password);
+
+      compare(password, encPass, (err, result) => {
+        if (err) {
+          res.send({ msg: "error in compare", data: err });
+          return;
+        }
+
+        jwt.sign({ course: "xyz" }, process.env.privateKey, (err, decode) => {
+          if (err) {
+            res.send({ msg: "error found in jwt", data: err });
+            return;
+          }
+          console.log("decode", decode);
+        });
+      });
+
+      res.send({ msg: presentUser });
+      return;
+    } else {
+      res.send({ msg: "please signup first" });
+      return;
+    }
+  } catch (error) {
+    console.log(error);
   }
-
-  const presentUser = UserModel.findOne({ email: data.email });
-
-  console.log("presentUser", presentUser);
-
-
-  // res.send({ msg: "login page", data: data });
-
-  
- 
-
 };
 
 module.exports = { Signup, Login };
