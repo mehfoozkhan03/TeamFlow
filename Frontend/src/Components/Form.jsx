@@ -1,23 +1,11 @@
-import React from "react";
 
+import React from "react";
 import { ApiCall } from "../Api/ApiCall";
 import "../Style/Form.css";
 import { useLocation } from "react-router-dom";
 
-/* 
-{
-name:"nfg",
-email:"nfgf",
-password:"nfgfr"
-}
-*/
-
-export const Form = ({ props, button }) => {
-
-  const location= useLocation();
-
-
-  console.log(location)
+export const Form = ({ props = [], button }) => {
+  const location = useLocation();
 
   const [form, setForm] = React.useState(() => {
     return props.reduce((acc, curr) => {
@@ -28,72 +16,84 @@ export const Form = ({ props, button }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = await ApiCall.post(`/user${location.pathname}`, form);
-    console.log("data", data);
+
+    try {
+      const data = await ApiCall.post(
+        `/user/${location.pathname}`,
+        form
+      );
+      console.log("data", data);
+    } catch (error) {
+      console.error("Form submit failed:", error);
+    }
   };
 
-  console.log(form);
   return (
-    <form className="form" onSubmit={(e) => handleSubmit(e)}>
-      {props?.map((el) => (
+    <form className="form" onSubmit={handleSubmit}>
+<h2 className="form-title">
+  {location.pathname.toLowerCase().includes("signup")
+    ? "NEW REGISTRATION"
+    : "LOGIN"}
+</h2>
+      {props.map((el) => (
         <div key={el.id}>
-          {el.name != "gender" ? (
+          {el.type !== "select" ? (
             <>
-              <label htmlFor={el.name}>{el.name}</label>
+              <label className="form-label" htmlFor={el.name}>
+                {el.name}
+              </label>
+
               <input
+                id={el.name}
+                className="form-input"
                 type={el.type}
                 name={el.name}
                 placeholder={el.placeholder}
-                onChange={(e) => handleChange(e)}
+                value={form[el.name] ?? ""}
+                onChange={handleChange}
               />
             </>
           ) : (
             <>
-              <label>{el.name}</label>
-              <div className="gender">
-                <div
-                  className="child_gender"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: "10px",
-                  }}
-                >
-                  {Object.entries(el.typeOfGender).map(([key, value]) => {
-                    return (
-                      <div key={key}>
-                        <label htmlFor={el.name}>{key}</label>
-                        <input
-                          name={el.name}
-                          type={value.type}
-                          value={key.replace(/\b\w/g, char => char.toUpperCase())}
-                          onChange={(e) => handleChange(e)}
-                        />
-                      </div>
-                    );
-                  })}
+              <label className="form-label" htmlFor={el.name}>
+                {el.name}
+              </label>
 
-                  {/* <label htmlFor="">{el.typeOfGender.male.name}</label>
-                  <input name={el.name} type={el.typeOfGender.male.type} />
-                  <label htmlFor="">{el.typeOfGender.female.name}</label>
-                  <input name={el.name} type={el.typeOfGender.female.type} /> */}
-                </div>
-              </div>
+              <select
+                id={el.name}
+                className="form-input"
+                name={el.name}
+                value={form[el.name] ?? ""}
+                onChange={handleChange}
+                required
+              >
+                <option value="" disabled>
+                  Select Gender
+                </option>
+
+                {el.options?.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </>
           )}
         </div>
       ))}
-      <button type="submit">{button}</button>
+
+      <button type="submit" className="form-btn">
+        {button}
+      </button>
     </form>
   );
 };

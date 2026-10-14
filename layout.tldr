@@ -299,9 +299,9 @@
 			"typeName": "shape"
 		},
 		{
-			"x": 0,
-			"y": 0,
-			"z": 1,
+			"x": -37.16188153208418,
+			"y": -305.4389084565671,
+			"z": 0.46927551633004916,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
@@ -662,7 +662,7 @@
 			"editingShapeId": null,
 			"croppingShapeId": null,
 			"selectedShapeIds": [
-				"shape:XmYyLEPKfxccuP-eAz7IP"
+				"shape:devNQWG4ZcMxMcp1cc73E"
 			],
 			"hoveredShapeId": null,
 			"erasingShapeIds": [],
@@ -1032,6 +1032,14 @@
 			"parentId": "page:page",
 			"index": "aYBFr",
 			"typeName": "shape"
+		},
+		{
+			"name": "",
+			"color": "#11B3A3",
+			"imageUrl": "",
+			"meta": {},
+			"id": "user:hw38IuI8zzhxlJ0DdPlzL",
+			"typeName": "user"
 		},
 		{
 			"x": 176,
@@ -1546,6 +1554,45 @@
 			"typeName": "shape"
 		},
 		{
+			"x": 437.35323291653395,
+			"y": 587.5759570516068,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:devNQWG4ZcMxMcp1cc73E",
+			"type": "geo",
+			"props": {
+				"w": 992.5939397224618,
+				"h": 111.66146980408553,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"flipX": false,
+				"flipY": false,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "b01khr",
+			"typeName": "shape"
+		},
+		{
 			"x": 593,
 			"y": 82,
 			"rotation": 0,
@@ -1627,14 +1674,12 @@
 			"followingUserId": null,
 			"opacityForNextShape": 1,
 			"stylesForNextShape": {
-				"tldraw:geo": "rectangle",
-				"tldraw:fill": "solid",
-				"tldraw:color": "light-violet"
+				"tldraw:geo": "rectangle"
 			},
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "cross",
+				"type": "nwse-resize",
 				"rotation": 0
 			},
 			"isFocusMode": false,
@@ -1644,8 +1689,8 @@
 			"screenBounds": {
 				"x": 0,
 				"y": 0,
-				"w": 1085,
-				"h": 605
+				"w": 914.4000244140625,
+				"h": 562.4000244140625
 			},
 			"insets": [
 				false,
@@ -1660,7 +1705,7 @@
 			"isChatting": false,
 			"highlightedUserIds": [],
 			"isFocused": true,
-			"devicePixelRatio": 1,
+			"devicePixelRatio": 1.25,
 			"isCoarsePointer": false,
 			"isHoveringCanvas": true,
 			"openMenus": [],

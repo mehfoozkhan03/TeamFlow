@@ -1,21 +1,22 @@
+
 export const login = [
   {
     id: 1,
     name: "name",
     type: "text",
-    placeholder: "enter you'r name...",
+    placeholder: "Name",
   },
   {
     id: 2,
     name: "email",
     type: "email",
-    placeholder: "enter you'r email...",
+    placeholder: "Email",
   },
   {
     id: 3,
     name: "password",
     type: "password",
-    placeholder: "enter you'r password...",
+    placeholder: "Password",
   },
 ];
 
@@ -24,19 +25,19 @@ export const signup = [
     id: 1,
     name: "name",
     type: "text",
-    placeholder: "enter you'r name...",
+    placeholder: "Name",
   },
   {
     id: 2,
     name: "email",
     type: "email",
-    placeholder: "enter you'r email...",
+    placeholder: "Email",
   },
   {
     id: 3,
     name: "password",
     type: "password",
-    placeholder: "enter you'r password...",
+    placeholder: "Password",
   },
   {
     id: 4,
@@ -47,36 +48,28 @@ export const signup = [
     id: 5,
     name: "phone",
     type: "tel",
-    placeholder: "enter you'r phone...",
+    placeholder: "Phone",
   },
   {
     id: 6,
     name: "gender",
-    typeOfGender: {
-      male: {
-        type: "radio",
-        name: "male",
-      },
-      female: {
-        type: "radio",
-        name: "female",
-      },
-      other: {
-        type: "radio",
-        name: "other",
-      },
-    },
+    type: "select",
+    options: [
+      { label: "Male", value: "male" },
+      { label: "Female", value: "female" },
+      { label: "Other", value: "other" },
+    ],
   },
 ];
 
-/* 
+/*
 {
-name ..,
-dob ..,
-gender,
-email ..,
-password ..,
-phone ..
+  name: "",
+  dob: "",
+  gender: "",
+  email: "",
+  password: "",
+  phone: ""
 }
 */
 
