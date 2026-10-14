@@ -26,3 +26,23 @@ TeamFlow — Multi-Tenant Project Management SaaS
 
     npm create vite@latest frontend
 
+
+
+
+# Team 
+
+- shivam 
+    - navbar 
+    - routes
+    - login & signup 
+
+- manish
+    - design
+    - logo
+
+- sneha
+    - about 
+    - contact
+
+- yasir
+    - home
