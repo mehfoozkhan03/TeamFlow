@@ -1,9 +1,9 @@
-import {configureStore} from "@reduxjs/toolkit"
+import { configureStore } from "@reduxjs/toolkit";
 
-import {UserReducer} from "./User/User"
+import UserReducer from "./User/User";
 
 export const timeflow_Store = configureStore({
-    reducer:{
-        user:UserReducer
-    }
+  reducer: {
+    user: UserReducer,
+  },
 });
