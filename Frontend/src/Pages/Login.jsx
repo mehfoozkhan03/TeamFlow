@@ -1,11 +1,7 @@
-import React from 'react'
-import { Form } from '../Components/Form'
+import React from "react";
+import { Form } from "../Components/Form";
+import { login as data } from "../Data/form";
 
-import { login as data } from '../Data/form'
-
-export const Login = () => {
- 
-  return (
-    <Form props={data} button="login"/>
-  )
-}
+export const Login = () => (
+  <Form props={data} button="Sign in to TeamFlow" />
+);
