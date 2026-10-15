@@ -6,9 +6,20 @@ import { userAuthServices as userAuth } from "../../Services/UserServices";
 
 // ========= asyncThunk fucntion of 'user' ========= //
 
-const fetchUser = createAsyncThunk("fetchUserAll", async (value) => {
+const signupUser = createAsyncThunk("signupUser", async (value) => {
   try {
     let data = await userAuth.signup(value);
+
+    console.log("🚀 ~ data:", data);
+    return data;
+  } catch (error) {
+    console.log("🚀 ~ error:", error);
+  }
+});
+
+const loginUser = createAsyncThunk("signupUser", async (value) => {
+  try {
+    let data = await userAuth.login(value);
 
     console.log("🚀 ~ data:", data);
     return data;
@@ -27,7 +38,7 @@ const initialState = {
 };
 
 const UserReducer = createSlice({
-  name: "user",
+  name: "user", // action prefix
   initialState,
   reducers: (state, action) => {
     // sync code
@@ -40,8 +51,9 @@ const UserReducer = createSlice({
 
 export {
   // === thunk export === //
-  fetchUser,
-
-  // === state export === //
-  UserReducer,
+  signupUser,
+  loginUser
 };
+// === state export === //
+
+export default UserReducer.reducer;
