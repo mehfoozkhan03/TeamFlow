@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
@@ -38,6 +39,7 @@ export const Navbar = () => {
               <h1 className="text-[23px] font-extrabold leading-tight tracking-tight text-slate-900">
                 Team<span className="text-violet-600">Flow</span>
               </h1>
+
               <p className="mt-1 text-[11px] font-medium tracking-wide text-slate-500">
                 WORK BETTER, TOGETHER
               </p>
@@ -52,6 +54,10 @@ export const Navbar = () => {
 
             <NavLink to="/about" className={navLinkClass}>
               About
+            </NavLink>
+
+            <NavLink to="/contact" className={navLinkClass}>
+              Contact
             </NavLink>
           </div>
 
@@ -77,7 +83,9 @@ export const Navbar = () => {
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+            aria-label={
+              menuOpen ? "Close navigation" : "Open navigation"
+            }
             aria-expanded={menuOpen}
             className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 md:hidden"
           >
@@ -89,6 +97,7 @@ export const Navbar = () => {
         {menuOpen && (
           <div className="border-t border-slate-100 pb-5 pt-4 md:hidden">
             <div className="flex flex-col gap-2">
+
               <NavLink
                 to="/"
                 end
@@ -106,6 +115,15 @@ export const Navbar = () => {
                 About
               </NavLink>
 
+              <NavLink
+                to="/contact"
+                onClick={closeMenu}
+                className={navLinkClass}
+              >
+                Contact
+              </NavLink>
+
+              {/* Mobile action buttons */}
               <div className="mt-3 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4">
                 <NavLink
                   to="/login"
@@ -120,7 +138,8 @@ export const Navbar = () => {
                   onClick={closeMenu}
                   className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-3 py-3 text-center text-sm font-bold text-white shadow-md shadow-violet-200"
                 >
-                  Get Started <FaArrowRight size={12} />
+                  Get Started
+                  <FaArrowRight size={12} />
                 </NavLink>
               </div>
             </div>
