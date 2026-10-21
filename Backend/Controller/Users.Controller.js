@@ -62,25 +62,31 @@ const Login = async (req, res) => {
         if (err) {
           res.send({ msg: "error in compare", data: err });
           return;
-        }
+        } else if (result) {
+          // console.log("🚀 ~ Login ~ result:", result);
 
-        jwt.sign({ course: "xyz" }, process.env.privateKey, (err, decode) => {
-          if (err) {
-            res.send({ msg: "error found in jwt", data: err });
-            return;
-          }
-          console.log("decode", decode);
-        });
+          jwt.sign({ course: "xyz" }, process.env.privateKey, (err, decode) => {
+            if (err) {
+              res.send({ msg: "error found in jwt", data: err });
+              return;
+            }
+            // console.log("decode", decode);
+            res.send({ msg: "login successfull", token: decode });
+          });
+        } else {
+          res.send({ msg: "please enter correct user or pass!!" });
+        }
       });
 
-      res.send({ msg: presentUser });
-      return;
+      // res.send({ msg: presentUser });
+      // return;
     } else {
       res.send({ msg: "please signup first" });
       return;
     }
   } catch (error) {
     console.log(error);
+    return;
   }
 };
 
