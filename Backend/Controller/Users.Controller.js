@@ -39,38 +39,49 @@ const Signup = async (req, res) => {
 };
 
 const Login = async (req, res) => {
-  // login logic
-
   try {
     const { email, password } = req.body;
+    console.log("email", email, "plainPass", password);
 
-    // db compare
+    if (!email || !password) {
+      res.send({ msg: "please provide data and correct credential" });
+      return;
+    }
 
-    const data = await UserModel.find({ email: email });
-    console.log("🚀 ~ Login ~ data:", data);
+    const presentUser = await UserModel.findOne({ email: email });
 
-    if (data.length > 0) {
-      // code
+    if (presentUser.length > 0 || presentUser) {
+      // console.log("presentUser", presentUser);
 
-       compare(password, data?.password,process.env.salt,  function(err, decode){
-        if (err) console.log("err in compare", err);
+      // login
 
-        console.log("decoded", decode);
+      const encPass = presentUser.password;
+      console.log("encPass", encPass, "myPaass", password);
+
+      compare(password, encPass, (err, result) => {
+        if (err) {
+          res.send({ msg: "error in compare", data: err });
+          return;
+        }
+
+        jwt.sign({ course: "xyz" }, process.env.privateKey, (err, decode) => {
+          if (err) {
+            res.send({ msg: "error found in jwt", data: err });
+            return;
+          }
+          console.log("decode", decode);
+        });
       });
+
+      res.send({ msg: presentUser });
+      return;
     } else {
-      res.send({ msg: "please signup first ", token });
+      res.send({ msg: "please signup first" });
+      return;
     }
   } catch (error) {
-    res.send({ msg: "something went wrong in server", error });
-    // throw Error()
+    console.log(error);
   }
-
-  /* 
-  client side
-
-
-  server side   
-  */
 };
 
 module.exports = { Signup, Login };

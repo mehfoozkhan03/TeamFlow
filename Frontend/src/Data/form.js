@@ -1,4 +1,3 @@
-
 export const login = [
   {
     id: 1,
@@ -74,3 +73,5 @@ export const signup = [
 */
 
 export const admin = [];
+
+export const contactVal = [];
