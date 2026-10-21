@@ -8,7 +8,8 @@
 export const Home = () => {
   return (
     <>
-    Demo page
+
+    <h1>Demo page</h1>
       {/* <Hero />
       <DashboardPreview />
       <Features />
