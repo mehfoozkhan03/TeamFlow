@@ -81,7 +81,7 @@ export const Form = ({ props = [], button }) => {
       <div className="pointer-events-none absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-violet-600/20 blur-[120px]" />
 
       {/* Authentication card */}
-      <section className="relative w-full max-w-[460px] rounded-[28px] border border-white/10 bg-white p-7 shadow-2xl shadow-black/30 sm:p-10">
+      <section className="relative w-full max-w-115 rounded-[28px] border border-white/10 bg-white p-7 shadow-2xl shadow-black/30 sm:p-10">
         {/* Logo */}
         <Link to="/" className="mb-9 flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-200/60">
