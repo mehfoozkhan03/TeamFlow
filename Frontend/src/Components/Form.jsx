@@ -1,18 +1,32 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ApiCall } from "../Api/ApiCall";
 
+import { useSelector, useDispatch } from "react-redux";
+import { signupUser } from "../Store/User/User";
+
 export const Form = ({ props = [], button }) => {
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const isSignup = location.pathname.toLowerCase().includes("signup");
+
+  const { isLoading, isError, user, isAuth } = useSelector(
+    (store) => store.user,
+  );
+  console.log(
+    "🚀 ~ Form ~ isLoading,isError,user,isAuth:",
+    isLoading,
+    isError,
+    user,
+    isAuth,
+  );
 
   const [form, setForm] = React.useState(() =>
     props.reduce((acc, field) => {
       acc[field.name] = "";
       return acc;
-    }, {})
+    }, {}),
   );
 
   const [loading, setLoading] = React.useState(false);
@@ -32,47 +46,42 @@ export const Form = ({ props = [], button }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
-    setMessage("");
-    setSuccess(false);
+    dispatch(signupUser(form)); // for reducer
 
-    try {
-      const endpoint = location.pathname.replace(/\/+$/, "");
+    // setLoading(true);
+    // setMessage("");
+    // setSuccess(false);
 
-      const response = await ApiCall.post(
-        `/user${endpoint}`,
-        form
-      );
+    // try {
+    //   const endpoint = location.pathname.replace(/\/+$/, "");
 
-      setSuccess(true);
-      setMessage(
-        response.data?.message || "Request completed successfully."
-      );
+    //   const response = await ApiCall.post(`/user${endpoint}`, form);
 
-      console.log("TeamFlow response:", response.data);
-    } catch (error) {
-      console.error("Form submission failed:", error);
+    //   setSuccess(true);
+    //   setMessage(response.data?.message || "Request completed successfully.");
 
-      setMessage(
-        error.response?.data?.message ||
-          "Something went wrong. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
+    //   console.log("TeamFlow response:", response.data);
+    // } catch (error) {
+    //   console.error("Form submission failed:", error);
+
+    //   setMessage(
+    //     error.response?.data?.message ||
+    //       "Something went wrong. Please try again.",
+    //   );
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#101426] px-4 py-12 sm:px-6">
-
       {/* Background decoration */}
       <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-indigo-600/20 blur-[120px]" />
 
       <div className="pointer-events-none absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-violet-600/20 blur-[120px]" />
 
       {/* Authentication card */}
-      <section className="relative w-full max-w-[460px] rounded-[28px] border border-white/10 bg-white p-7 shadow-2xl shadow-black/30 sm:p-10">
-
+      <section className="relative w-full max-w-115 rounded-[28px] border border-white/10 bg-white p-7 shadow-2xl shadow-black/30 sm:p-10">
         {/* Logo */}
         <Link to="/" className="mb-9 flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-200/60">
@@ -84,10 +93,7 @@ export const Form = ({ props = [], button }) => {
               className="h-6 w-6"
             >
               <rect x="3" y="4" width="18" height="16" rx="4" />
-              <path
-                d="M8 9h8M8 13h5"
-                strokeLinecap="round"
-              />
+              <path d="M8 9h8M8 13h5" strokeLinecap="round" />
               <path
                 d="m14 16 2 2 4-4"
                 strokeLinecap="round"
@@ -126,16 +132,13 @@ export const Form = ({ props = [], button }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-
           {props.map((field) => (
             <div key={field.id}>
               <label
                 htmlFor={field.name}
                 className="mb-2 block text-sm font-semibold capitalize text-slate-700"
               >
-                {field.name === "dob"
-                  ? "Date of birth"
-                  : field.name}
+                {field.name === "dob" ? "Date of birth" : field.name}
               </label>
 
               {field.type === "select" ? (
@@ -168,15 +171,12 @@ export const Form = ({ props = [], button }) => {
                         : field.type
                     }
                     placeholder={
-                      field.placeholder ||
-                      `Enter your ${field.name}`
+                      field.placeholder || `Enter your ${field.name}`
                     }
                     value={form[field.name] ?? ""}
                     onChange={handleChange}
                     required
-                    minLength={
-                      field.name === "password" ? 8 : undefined
-                    }
+                    minLength={field.name === "password" ? 8 : undefined}
                     autoComplete={
                       field.name === "password"
                         ? isSignup
@@ -200,9 +200,7 @@ export const Form = ({ props = [], button }) => {
                   {field.name === "password" && (
                     <button
                       type="button"
-                      onClick={() =>
-                        setShowPassword((prev) => !prev)
-                      }
+                      onClick={() => setShowPassword((prev) => !prev)}
                       className="absolute inset-y-0 right-0 px-4 text-xs font-semibold text-slate-500 transition hover:text-indigo-600"
                     >
                       {showPassword ? "Hide" : "Show"}
@@ -228,7 +226,7 @@ export const Form = ({ props = [], button }) => {
                 type="button"
                 onClick={() =>
                   setMessage(
-                    "Please contact your administrator to reset your password."
+                    "Please contact your administrator to reset your password.",
                   )
                 }
                 className="font-semibold text-indigo-600 hover:text-indigo-800"
@@ -282,17 +280,12 @@ export const Form = ({ props = [], button }) => {
         {/* Alternate action */}
         <div className="mt-7 flex items-center gap-4">
           <div className="h-px flex-1 bg-slate-200" />
-          <span className="text-xs font-medium text-slate-400">
-            TEAMFLOW
-          </span>
+          <span className="text-xs font-medium text-slate-400">TEAMFLOW</span>
           <div className="h-px flex-1 bg-slate-200" />
         </div>
 
         <p className="mt-6 text-center text-sm text-slate-500">
-          {isSignup
-            ? "Already have an account?"
-            : "New to TeamFlow?"}{" "}
-
+          {isSignup ? "Already have an account?" : "New to TeamFlow?"}{" "}
           <Link
             to={isSignup ? "/login" : "/signup"}
             className="font-bold text-indigo-600 transition hover:text-indigo-800 hover:underline"
@@ -300,14 +293,12 @@ export const Form = ({ props = [], button }) => {
             {isSignup ? "Sign in" : "Create an account"}
           </Link>
         </p>
-
       </section>
 
       {/* Footer */}
       <p className="absolute bottom-3 text-center text-xs text-slate-500">
         © {new Date().getFullYear()} TeamFlow. Built for better teamwork.
       </p>
-
     </main>
   );
 };

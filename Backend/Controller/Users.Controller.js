@@ -1,36 +1,41 @@
 const { UserModel } = require("../Model/User.model");
 require("dotenv").config({});
 
-const jwt = require("jsonwebtoken");
 const { genSalt, hash, compare } = require("bcrypt");
+
+const jwt = require("jsonwebtoken");
 
 // signup -> DB
 
 const Signup = async (req, res) => {
-  const { password, ...rest } = req.body;
+  try {
+    const { password, ...rest } = req.body;
 
-  console.log("pass", password);
-  console.log("process.env.salt", typeof +process.env.salt);
+    console.log("pass", password);
+    console.log("process.env.salt", typeof +process.env.salt);
 
-  genSalt(+process.env.salt, async (err, salt) => {
-    console.log("salt", salt);
-    if (err) {
-      res.send({ msg: "error in salt", data: err });
-    } else {
-      hash(password, salt, async (err, hashPass) => {
-        if (err) {
-          res.send({ msg: "error in hash", data: err });
-        }
-        delete req.body.password;
-        const finalData = {
-          ...rest,
-          password: hashPass,
-        };
-        const userValue = await UserModel.create(finalData);
-        res.send({ msg: "this is user page data????", userValue });
-      });
-    }
-  });
+    genSalt(+process.env.salt, async (err, salt) => {
+      console.log("salt", salt);
+      if (err) {
+        res.send({ msg: "error in salt", data: err });
+      } else {
+        hash(password, salt, async (err, hashPass) => {
+          if (err) {
+            res.send({ msg: "error in hash? pass must be wrong!", data: err });
+          }
+          delete req.body.password;
+          const finalData = {
+            ...rest,
+            password: hashPass,
+          };
+          const userValue = await UserModel.create(finalData);
+          res.send({ msg: "this is user page data????", userValue });
+        });
+      }
+    });
+  } catch (error) {
+    res.send({ msg: "something went wrong in server", error });
+  }
 };
 
 const Login = async (req, res) => {
