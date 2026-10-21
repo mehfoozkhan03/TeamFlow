@@ -18,7 +18,6 @@ export const AllRoutes = () => {
         <Route path="contact" element={<Contact />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
-        <Route path="signup" element={<Signup />} />
       </Route>
       <Route path="*" element={<ErrorPage />} />
     </Routes>
