@@ -58,7 +58,7 @@ const faqs = [
   },
 ];
 
-export default function ContactUs() {
+export const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
