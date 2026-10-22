@@ -1,59 +1,115 @@
-// state
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { userAuthServices as userAuth } from "../../Services/UserServices";
+import {
+  userAuthServices as userAuth,
+} from "../../Services/UserServices";
 
-// ========= asyncThunk fucntion of 'user' ========= //
+// ========== SIGNUP THUNK ========== //
 
-const signupUser = createAsyncThunk("signupUser", async (value) => {
-  try {
-    let data = await userAuth.signup(value);
-
-    console.log("🚀 ~ data:", data);
-    return data;
-  } catch (error) {
-    console.log("🚀 ~ error:", error);
+export const signupUser = createAsyncThunk(
+  "user/signupUser",
+  async (value, { rejectWithValue }) => {
+    try {
+      const data = await userAuth.signup(value);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Signup failed"
+      );
+    }
   }
-});
+);
 
-const loginUser = createAsyncThunk("signupUser", async (value) => {
-  try {
-    let data = await userAuth.login(value);
+// ========== LOGIN THUNK ========== //
 
-    console.log("🚀 ~ data:", data);
-    return data;
-  } catch (error) {
-    console.log("🚀 ~ error:", error);
+export const loginUser = createAsyncThunk(
+  "user/loginUser",
+  async (value, { rejectWithValue }) => {
+    try {
+      const data = await userAuth.login(value);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Login failed"
+      );
+    }
   }
-});
+);
 
-// ========= state of redux 'user' ========= //
+// ========== INITIAL STATE ========== //
 
 const initialState = {
-  user: [],
+  user: null,
   isAuth: false,
   isLoading: false,
   isError: false,
+  message: "",
 };
 
+// ========== REDUX SLICE ========== //
+
 const UserReducer = createSlice({
-  name: "user", // action prefix
+  name: "user",
   initialState,
-  reducers: (state, action) => {
-    // sync code
-    // 1. logout
+
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+      state.isAuth = false;
+      state.message = "";
+    },
   },
+
   extraReducers: (builder) => {
-    // async behaviour code.
+    builder
+
+      // SIGNUP: PENDING
+      .addCase(signupUser.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.message = "";
+      })
+
+      // SIGNUP: SUCCESS
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+        state.message = "Signup successful";
+      })
+
+      // SIGNUP: ERROR
+      .addCase(signupUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload || "Signup failed";
+      })
+
+      // LOGIN: PENDING
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.message = "";
+      })
+
+      // LOGIN: SUCCESS
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+        state.isAuth = true;
+        state.isError = false;
+        state.message = "Login successful";
+      })
+
+      // LOGIN: ERROR
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload || "Login failed";
+      });
   },
 });
 
-export {
-  // === thunk export === //
-  signupUser,
-  loginUser
-};
-// === state export === //
+export const { logout } = UserReducer.actions;
 
 export default UserReducer.reducer;
