@@ -71,20 +71,41 @@ const Login = async (req, res) => {
         msg: "JWT configuration error",
       });
     }
-console.log("JWT key exists:", Boolean(process.env.privateKey));
+    // console.log("JWT key exists:", Boolean(process.env.privateKey));
     const token = jwt.sign(
       {
+        // payload
         userId: presentUser._id,
         email: presentUser.email,
       },
       process.env.privateKey,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
-    return res.status(200).send({
+    /* return res.status(200).send({
       msg: "Login successful",
       token,
-    });
+    }); 
+    */
+
+    console.log("🚀 ~ Login ~ process.env.production:", process.env.production);
+    return res
+      .cookie("token", token, {
+        httpOnly: false,
+        secure: process.env.production === "production",
+        sameSite: "Lax", // None | Lax 
+        maxAge: 60 * 60 * 1000,
+        // path: "/",
+      })
+      .status(200)
+      .json({
+        msg: "Login successful",
+        user: {
+          id: presentUser._id,
+          email: presentUser.email,
+          // token
+        },
+      });
   } catch (error) {
     console.error("Login error:", error.message);
 

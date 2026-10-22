@@ -28,6 +28,8 @@ export const loginUser = createAsyncThunk(
   async (value, { rejectWithValue }) => {
     try {
       const data = await userAuth.login(value);
+      console.log("🚀 ~ data:login", data);
+      
       return data;
     } catch (error) {
       return rejectWithValue(

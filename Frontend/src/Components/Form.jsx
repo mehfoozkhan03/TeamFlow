@@ -9,6 +9,7 @@ export const Form = ({ props = [], button }) => {
   const dispatch = useDispatch();
 
   const isSignup = location.pathname.toLowerCase().includes("signup");
+  console.log("🚀 ~ Form ~ isSignup:", isSignup)
 
   const { isError, user, isAuth } = useSelector(
     (store) => store.user
