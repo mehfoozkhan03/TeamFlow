@@ -1,17 +1,22 @@
 import { ApiCall } from "../Api/ApiCall";
 
 const userAuthServices = {
-  // signup
-  signup(data) {
-    return ApiCall.post("/user/signup", data);
+  // Signup
+  async signup(data) {
+    const response = await ApiCall.post("/user/signup", data);
+    return response.data;
   },
-  // login
-  login(data) {
-    return ApiCall.post("/user/login", data);
+
+  // Login
+  async login(data) {
+    const response = await ApiCall.post("/user/login", data);
+    return response.data;
   },
-  // allusers
-  allUsers() {
-    return ApiCall.get("/user/me");
+
+  // Get logged-in user
+  async allUsers() {
+    const response = await ApiCall.get("/user/me");
+    return response.data;
   },
 };
 

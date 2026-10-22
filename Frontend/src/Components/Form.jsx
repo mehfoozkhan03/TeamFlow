@@ -1,9 +1,8 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ApiCall } from "../Api/ApiCall";
-
 import { useSelector, useDispatch } from "react-redux";
-import { signupUser } from "../Store/User/User";
+import { signupUser, loginUser } from "../Store/User/User";
 
 export const Form = ({ props = [], button }) => {
   const location = useLocation();
@@ -11,22 +10,15 @@ export const Form = ({ props = [], button }) => {
 
   const isSignup = location.pathname.toLowerCase().includes("signup");
 
-  const { isLoading, isError, user, isAuth } = useSelector(
-    (store) => store.user,
-  );
-  console.log(
-    "🚀 ~ Form ~ isLoading,isError,user,isAuth:",
-    isLoading,
-    isError,
-    user,
-    isAuth,
+  const { isError, user, isAuth } = useSelector(
+    (store) => store.user
   );
 
   const [form, setForm] = React.useState(() =>
     props.reduce((acc, field) => {
       acc[field.name] = "";
       return acc;
-    }, {}),
+    }, {})
   );
 
   const [loading, setLoading] = React.useState(false);
@@ -43,34 +35,39 @@ export const Form = ({ props = [], button }) => {
     }));
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    dispatch(signupUser(form)); // for reducer
+    setLoading(true);
+    setMessage("");
+    setSuccess(false);
 
-    // setLoading(true);
-    // setMessage("");
-    // setSuccess(false);
+    try {
+      let response;
 
-    // try {
-    //   const endpoint = location.pathname.replace(/\/+$/, "");
+      if (isSignup) {
+        response = await dispatch(signupUser(form)).unwrap();
+      } else {
+        response = await dispatch(loginUser(form)).unwrap();
+      }
 
-    //   const response = await ApiCall.post(`/user${endpoint}`, form);
+      console.log("Backend response:", response);
 
-    //   setSuccess(true);
-    //   setMessage(response.data?.message || "Request completed successfully.");
+      setSuccess(true);
+      setMessage(response?.message || "Request successful");
+    } catch (error) {
+      console.error("Request failed:", error);
 
-    //   console.log("TeamFlow response:", response.data);
-    // } catch (error) {
-    //   console.error("Form submission failed:", error);
-
-    //   setMessage(
-    //     error.response?.data?.message ||
-    //       "Something went wrong. Please try again.",
-    //   );
-    // } finally {
-    //   setLoading(false);
-    // }
+      setSuccess(false);
+      setMessage(
+        typeof error === "string"
+          ? error
+          : error?.message || "Something went wrong"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -226,7 +223,7 @@ export const Form = ({ props = [], button }) => {
                 type="button"
                 onClick={() =>
                   setMessage(
-                    "Please contact your administrator to reset your password.",
+                    "Please contact your administrator to reset your password."
                   )
                 }
                 className="font-semibold text-indigo-600 hover:text-indigo-800"
@@ -251,7 +248,7 @@ export const Form = ({ props = [], button }) => {
             </div>
           )}
 
-          {/* Primary action */}
+          {/* Submit button */}
           <button
             type="submit"
             disabled={loading}
@@ -277,7 +274,7 @@ export const Form = ({ props = [], button }) => {
           </button>
         </form>
 
-        {/* Alternate action */}
+        {/* Footer divider */}
         <div className="mt-7 flex items-center gap-4">
           <div className="h-px flex-1 bg-slate-200" />
           <span className="text-xs font-medium text-slate-400">TEAMFLOW</span>

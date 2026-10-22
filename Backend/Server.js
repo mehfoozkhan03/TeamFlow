@@ -1,8 +1,11 @@
 const express = require("express");
-
 const cors = require("cors");
+const dns = require("dns");
 
-require("dotenv").config();
+// Configure DNS before importing the database module
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+require("dotenv").config({ path: ".env.production" });
 
 const { UserRoutes } = require("./Router/User.routes");
 const { Connection } = require("./Config/db");
@@ -13,8 +16,11 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["*", "http://localhost:5173", "http://localhost:5174"]
-  }),
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+    ],
+  })
 );
 
 app.get("/", (req, res) => {
@@ -23,13 +29,20 @@ app.get("/", (req, res) => {
 
 app.use("/user", UserRoutes);
 
-app.listen(process.env.Port, async () => {
+const PORT = process.env.PORT || process.env.Port || 7000;
+
+async function startServer() {
   try {
     await Connection;
     console.log("DB connected....");
+
+    app.listen(PORT, () => {
+      console.log(`Server started....${PORT}`);
+    });
   } catch (error) {
-    console.log(error);
-  } finally {
-    console.log(`server started....${process.env.Port}`);
+    console.error("MongoDB connection failed:", error.message);
+    process.exit(1);
   }
-});
+}
+
+startServer();

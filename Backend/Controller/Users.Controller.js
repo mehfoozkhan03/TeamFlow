@@ -41,52 +41,56 @@ const Signup = async (req, res) => {
 const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("email", email, "plainPass", password);
 
     if (!email || !password) {
-      res.send({ msg: "please provide data and correct credential" });
-      return;
-    }
-
-    const presentUser = await UserModel.findOne({ email: email });
-
-    if (presentUser.length > 0 || presentUser) {
-      // console.log("presentUser", presentUser);
-
-      // login
-
-      const encPass = presentUser.password;
-      console.log("encPass", encPass, "myPaass", password);
-
-      compare(password, encPass, (err, result) => {
-        if (err) {
-          res.send({ msg: "error in compare", data: err });
-          return;
-        } else if (result) {
-          // console.log("🚀 ~ Login ~ result:", result);
-
-          jwt.sign({ course: "xyz" }, process.env.privateKey, (err, decode) => {
-            if (err) {
-              res.send({ msg: "error found in jwt", data: err });
-              return;
-            }
-            // console.log("decode", decode);
-            res.send({ msg: "login successfull", token: decode });
-          });
-        } else {
-          res.send({ msg: "please enter correct user or pass!!" });
-        }
+      return res.status(400).send({
+        msg: "Please provide email and password",
       });
-
-      // res.send({ msg: presentUser });
-      // return;
-    } else {
-      res.send({ msg: "please signup first" });
-      return;
     }
+
+    const presentUser = await UserModel.findOne({ email });
+
+    if (!presentUser) {
+      return res.status(404).send({
+        msg: "Please signup first",
+      });
+    }
+
+    const result = await compare(password, presentUser.password);
+
+    if (!result) {
+      return res.status(401).send({
+        msg: "Please enter correct email or password",
+      });
+    }
+
+    if (!process.env.privateKey) {
+      console.error("JWT privateKey is missing from environment variables");
+
+      return res.status(500).send({
+        msg: "JWT configuration error",
+      });
+    }
+console.log("JWT key exists:", Boolean(process.env.privateKey));
+    const token = jwt.sign(
+      {
+        userId: presentUser._id,
+        email: presentUser.email,
+      },
+      process.env.privateKey,
+      { expiresIn: "1d" }
+    );
+
+    return res.status(200).send({
+      msg: "Login successful",
+      token,
+    });
   } catch (error) {
-    console.log(error);
-    return;
+    console.error("Login error:", error.message);
+
+    return res.status(500).send({
+      msg: "Something went wrong during login",
+    });
   }
 };
 
