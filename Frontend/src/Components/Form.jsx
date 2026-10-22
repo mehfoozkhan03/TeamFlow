@@ -8,13 +8,15 @@ export const Form = ({ props = [], button }) => {
   const location = useLocation();
   const dispatch = useDispatch();
 
+  // Check whether the current page is the signup page.
   const isSignup = location.pathname.toLowerCase().includes("signup");
-  console.log("🚀 ~ Form ~ isSignup:", isSignup)
 
-  const { isError, user, isAuth } = useSelector(
+  // Read authentication state directly from Redux.
+  const { isError, user, isAuth, isLoading, message } = useSelector(
     (store) => store.user
   );
 
+  // Local state: form input values.
   const [form, setForm] = React.useState(() =>
     props.reduce((acc, field) => {
       acc[field.name] = "";
@@ -22,11 +24,10 @@ export const Form = ({ props = [], button }) => {
     }, {})
   );
 
-  const [loading, setLoading] = React.useState(false);
-  const [message, setMessage] = React.useState("");
-  const [success, setSuccess] = React.useState(false);
+  // Keep this local state, as requested.
   const [showPassword, setShowPassword] = React.useState(false);
 
+  // Update the value of the input that the user changes.
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -36,40 +37,24 @@ export const Form = ({ props = [], button }) => {
     }));
   };
 
-  
+  // Submit signup or login data.
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
-    setMessage("");
-    setSuccess(false);
-
     try {
-      let response;
-
       if (isSignup) {
-        response = await dispatch(signupUser(form)).unwrap();
+        await dispatch(signupUser(form)).unwrap();
       } else {
-        response = await dispatch(loginUser(form)).unwrap();
+        await dispatch(loginUser(form)).unwrap();
       }
-
-      console.log("Backend response:", response);
-
-      setSuccess(true);
-      setMessage(response?.message || "Request successful");
     } catch (error) {
+      // The rejected Redux action updates isError and message.
       console.error("Request failed:", error);
-
-      setSuccess(false);
-      setMessage(
-        typeof error === "string"
-          ? error
-          : error?.message || "Something went wrong"
-      );
-    } finally {
-      setLoading(false);
     }
   };
+
+  // Derive success from the Redux state.
+  const isSuccess = Boolean(message) && !isError;
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#101426] px-4 py-12 sm:px-6">
@@ -93,7 +78,7 @@ export const Form = ({ props = [], button }) => {
               <rect x="3" y="4" width="18" height="16" rx="4" />
               <path d="M8 9h8M8 13h5" strokeLinecap="round" />
               <path
-                d="m14 16 2 2 4-4"
+                d="m14 16 2 2 2-2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
@@ -195,6 +180,7 @@ export const Form = ({ props = [], button }) => {
                     }`}
                   />
 
+                  {/* Show/Hide password */}
                   {field.name === "password" && (
                     <button
                       type="button"
@@ -222,11 +208,11 @@ export const Form = ({ props = [], button }) => {
 
               <button
                 type="button"
-                onClick={() =>
-                  setMessage(
-                    "Please contact your administrator to reset your password."
-                  )
-                }
+                onClick={() => {
+                  // Your Redux slice can be updated to handle this message
+                  // if you want to manage it entirely through Redux.
+                  console.info("Password reset requested");
+                }}
                 className="font-semibold text-indigo-600 hover:text-indigo-800"
               >
                 Forgot password?
@@ -234,13 +220,13 @@ export const Form = ({ props = [], button }) => {
             </div>
           )}
 
-          {/* Status message */}
+          {/* Status message from Redux */}
           {message && (
             <div
               role="status"
               aria-live="polite"
               className={`rounded-xl border px-4 py-3 text-sm ${
-                success
+                isSuccess
                   ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                   : "border-rose-200 bg-rose-50 text-rose-700"
               }`}
@@ -252,12 +238,12 @@ export const Form = ({ props = [], button }) => {
           {/* Submit button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             className="group flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200/70 transition duration-200 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Please wait..." : button}
+            {isLoading ? "Please wait..." : button}
 
-            {!loading && (
+            {!isLoading && (
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
