@@ -82,19 +82,12 @@ const Login = async (req, res) => {
       { expiresIn: "1d" },
     );
 
-    /* return res.status(200).send({
-      msg: "Login successful",
-      token,
-    }); 
-    */
-
-    console.log("🚀 ~ Login ~ process.env.production:", process.env.production);
-    return res
+   res
       .cookie("token", token, {
         httpOnly: false,
-        secure: process.env.production === "production",
-        sameSite: "Lax", // None | Lax 
-        maxAge: 60 * 60 * 1000,
+        secure: false,
+        sameSite: "Lax", // None | Lax
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         // path: "/",
       })
       .status(200)
@@ -103,7 +96,7 @@ const Login = async (req, res) => {
         user: {
           id: presentUser._id,
           email: presentUser.email,
-          // token
+          token
         },
       });
   } catch (error) {

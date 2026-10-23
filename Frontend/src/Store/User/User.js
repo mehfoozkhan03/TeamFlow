@@ -1,9 +1,6 @@
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import {
-  userAuthServices as userAuth,
-} from "../../Services/UserServices";
+import { userAuthServices as userAuth } from "../../Services/UserServices";
 
 // ========== SIGNUP THUNK ========== //
 
@@ -15,10 +12,10 @@ export const signupUser = createAsyncThunk(
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || error.message || "Signup failed"
+        error.response?.data?.message || error.message || "Signup failed",
       );
     }
-  }
+  },
 );
 
 // ========== LOGIN THUNK ========== //
@@ -29,21 +26,21 @@ export const loginUser = createAsyncThunk(
     try {
       const data = await userAuth.login(value);
       console.log("🚀 ~ data:login", data);
-      
+
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || error.message || "Login failed"
+        error.response?.data?.message || error.message || "Login failed",
       );
     }
-  }
+  },
 );
 
 // ========== INITIAL STATE ========== //
 
 const initialState = {
   user: null,
-  isAuth: false,
+  isAuth: document.cookie.split("=")[1] ? true : false ?? false,
   isLoading: false,
   isError: false,
   message: "",
