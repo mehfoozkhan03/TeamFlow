@@ -52,7 +52,7 @@ export const Contact = () => {
   };
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#0B1020] text-slate-100">
+    <main className="min-h-screen overflow-hidden bg-[#f0f1f6] text-slate-100">
       {/* Background glow */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-blue-600/10 blur-[120px]" />
