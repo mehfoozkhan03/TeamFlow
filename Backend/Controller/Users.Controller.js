@@ -1,4 +1,4 @@
-const { UserModel } = require("../Model/User.model");
+const { UserModel } = require("../Model/user.model");
 require("dotenv").config({});
 
 const { genSalt, hash, compare } = require("bcrypt");

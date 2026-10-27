@@ -1,24 +1,19 @@
+
 const express = require("express");
 
 const { Signup, Login } = require("../Controller/Users.Controller");
 
 const UserRoutes = express.Router();
 
-// all data
+// Test route
 UserRoutes.get("/", (req, res) => {
-  res.send("this is user page data????");
+  res.send("This is user page data");
 });
 
-/* 
-path : /user/signup
-
-url http://localhost:7000//user/signup
-*/
-
-// signup data
+// Signup
 UserRoutes.post("/signup", Signup);
 
-// login
+// Login
 UserRoutes.post("/login", Login);
 
 module.exports = { UserRoutes };
