@@ -64,3 +64,8 @@ export const validateForm = (form, isSignup) => {
 
   return errors;
 };
+
+// contact Validation
+
+
+

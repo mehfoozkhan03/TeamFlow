@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { Layout } from "../Components/Layout";
 import { PrivateRoute } from "../Components/PrivateRoute";
-import { PublicRoute } from "../Components/PublicRoute";
+import { PublicRoute } from "../Components/PublicRoutes";
 
 import { Home } from "../Pages/Home";
 import { About } from "../Pages/About";
