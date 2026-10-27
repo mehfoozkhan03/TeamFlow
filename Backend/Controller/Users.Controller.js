@@ -1,4 +1,4 @@
-const { UserModel } = require("../Model/User.model");
+const { UserModel } = require("../Model/user.model");
 require("dotenv").config({});
 
 const { genSalt, hash, compare } = require("bcrypt");
@@ -71,14 +71,14 @@ const Login = async (req, res) => {
         msg: "JWT configuration error",
       });
     }
-console.log("JWT key exists:", Boolean(process.env.privateKey));
+    console.log("JWT key exists:", Boolean(process.env.privateKey));
     const token = jwt.sign(
       {
         userId: presentUser._id,
         email: presentUser.email,
       },
       process.env.privateKey,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     return res.status(200).send({
