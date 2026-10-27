@@ -11,12 +11,8 @@ import {
   Headphones,
 } from "lucide-react";
 
-import {contactDetails} from "../Data/contact";
-import {faqs} from "../Data/faqs";
-
-
-
-
+import { contactDetails } from "../Data/contact";
+import { faqs } from "../Data/faqs";
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -27,18 +23,58 @@ export const Contact = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [emailTouched, setEmailTouched] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  // Email validation
+  const validateEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    setSubmitted(false);
+    if (!email.trim()) {
+      return "Email address is required.";
+    }
+
+    if (!emailPattern.test(email.trim())) {
+      return "Please enter a valid email address.";
+    }
+
+    return "";
   };
 
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setSubmitted(false);
+
+    if (name === "email" && emailTouched) {
+      setEmailError(validateEmail(value));
+    }
+  };
+
+  // Validate email when the user leaves the field
+  const handleEmailBlur = () => {
+    setEmailTouched(true);
+    setEmailError(validateEmail(formData.email));
+  };
+
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    setEmailTouched(true);
+
+    const error = validateEmail(formData.email);
+    setEmailError(error);
+
+    if (error) {
+      return;
+    }
 
     // Frontend demo only: no message is sent to a server.
     setSubmitted(true);
@@ -49,6 +85,9 @@ export const Contact = () => {
       subject: "General enquiry",
       message: "",
     });
+
+    setEmailTouched(false);
+    setEmailError("");
   };
 
   return (
@@ -75,7 +114,7 @@ export const Contact = () => {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-400 sm:text-lg">
-            Have a question, an idea, or need a little help? Tell us what’s on
+            Have a question, an idea, or need a little help? Tell us what's on
             your mind. The TeamFlow team is ready to help you move forward.
           </p>
         </section>
@@ -93,8 +132,9 @@ export const Contact = () => {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               <div className="grid gap-5 sm:grid-cols-2">
+                {/* Full name */}
                 <div>
                   <label
                     htmlFor="name"
@@ -102,6 +142,7 @@ export const Contact = () => {
                   >
                     Full name
                   </label>
+
                   <input
                     id="name"
                     name="name"
@@ -115,6 +156,7 @@ export const Contact = () => {
                   />
                 </div>
 
+                {/* Email address with validation */}
                 <div>
                   <label
                     htmlFor="email"
@@ -122,6 +164,7 @@ export const Contact = () => {
                   >
                     Email address
                   </label>
+
                   <input
                     id="email"
                     name="email"
@@ -130,12 +173,33 @@ export const Contact = () => {
                     placeholder="you@example.com"
                     value={formData.email}
                     onChange={handleChange}
+                    onBlur={handleEmailBlur}
                     required
-                    className="w-full rounded-xl border border-white/10 bg-[#0B1020] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                    aria-invalid={Boolean(emailError)}
+                    aria-describedby={
+                      emailError ? "email-error" : undefined
+                    }
+                    className={`w-full rounded-xl border ${
+                      emailError
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-white/10 focus:border-blue-500 focus:ring-blue-500/20"
+                    } bg-[#0B1020] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:ring-2`}
                   />
+
+                  {emailError && (
+                    <p
+                      id="email-erccror"
+                      role="alert"
+                      className="mt-1.5 flex items-start gap-1.5 text-sm text-red-500"
+                    >
+                      <span aria-hidden="true">⚠</span>
+                      <span>{emailError}</span>
+                    </p>
+                  )}
                 </div>
               </div>
 
+              {/* Subject */}
               <div>
                 <label
                   htmlFor="subject"
@@ -143,6 +207,7 @@ export const Contact = () => {
                 >
                   What can we help you with?
                 </label>
+
                 <select
                   id="subject"
                   name="subject"
@@ -158,6 +223,7 @@ export const Contact = () => {
                 </select>
               </div>
 
+              {/* Message */}
               <div>
                 <label
                   htmlFor="message"
@@ -165,6 +231,7 @@ export const Contact = () => {
                 >
                   Your message
                 </label>
+
                 <textarea
                   id="message"
                   name="message"
@@ -177,6 +244,7 @@ export const Contact = () => {
                 />
               </div>
 
+              {/* Submit button */}
               <button
                 type="submit"
                 className="group flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-4 text-sm font-semibold text-white transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-[#10172A] active:scale-[0.99]"
@@ -188,6 +256,7 @@ export const Contact = () => {
                 />
               </button>
 
+              {/* Success message */}
               {submitted && (
                 <div
                   role="status"
@@ -219,7 +288,7 @@ export const Contact = () => {
               </h2>
 
               <p className="mt-4 text-sm leading-7 text-slate-400">
-                Whether you’re exploring TeamFlow or already using it, we’d
+                Whether you're exploring TeamFlow or already using it, we'd
                 love to hear from you.
               </p>
 
@@ -237,6 +306,7 @@ export const Contact = () => {
                         <h3 className="font-medium text-white">
                           {item.title}
                         </h3>
+
                         <p className="mt-1 text-sm text-slate-400">
                           {item.description}
                         </p>
@@ -247,10 +317,7 @@ export const Contact = () => {
                             className="mt-2 inline-flex items-center gap-1 break-all text-sm font-medium text-blue-400 transition hover:text-blue-300"
                           >
                             {item.value}
-                            <ArrowUpRight
-                              size={15}
-                              className="shrink-0"
-                            />
+                            <ArrowUpRight size={15} className="shrink-0" />
                           </a>
                         ) : (
                           <p className="mt-2 text-sm font-medium text-blue-400">
@@ -278,7 +345,7 @@ export const Contact = () => {
                 </h3>
 
                 <p className="mt-3 text-sm leading-7 text-slate-400">
-                  Have an idea that could make teamwork better? We’re always
+                  Have an idea that could make teamwork better? We're always
                   interested in hearing new perspectives.
                 </p>
 
@@ -300,9 +367,11 @@ export const Contact = () => {
             <span className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-400">
               FAQs
             </span>
+
             <h2 className="mt-4 text-3xl font-bold text-white sm:text-4xl">
               Frequently asked questions
             </h2>
+
             <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">
               Quick answers to help you get started with TeamFlow.
             </p>
@@ -316,10 +385,12 @@ export const Contact = () => {
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-slate-100 [&::-webkit-details-marker]:hidden">
                   {faq.question}
+
                   <span className="text-xl text-blue-400 transition-transform group-open:rotate-45">
                     +
                   </span>
                 </summary>
+
                 <p className="mt-4 pr-6 text-sm leading-7 text-slate-400">
                   {faq.answer}
                 </p>
@@ -340,7 +411,7 @@ export const Contact = () => {
 
           <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-400 sm:text-base">
             Your next great project starts with a conversation. Reach out and
-            let’s explore what we can build together.
+            let's explore what we can build together.
           </p>
 
           <a
@@ -361,4 +432,6 @@ export const Contact = () => {
       </div>
     </main>
   );
-}
+};
+
+export default Contact;
