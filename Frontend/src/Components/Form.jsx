@@ -3,20 +3,21 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signupUser, loginUser } from "../Store/User/User";
+import { validateForm } from "../utils/validation";
 
 export const Form = ({ props = [], button }) => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  // Check whether the current page is the signup page.
+  // Check whether the current page is signup.
   const isSignup = location.pathname.toLowerCase().includes("signup");
 
-  // Read authentication state directly from Redux.
-  const { isError, user, isAuth, isLoading, message } = useSelector(
+  // Redux authentication state.
+  const { isError, isLoading, message } = useSelector(
     (store) => store.user
   );
 
-  // Local state: form input values.
+  // Store form input values.
   const [form, setForm] = React.useState(() =>
     props.reduce((acc, field) => {
       acc[field.name] = "";
@@ -24,10 +25,13 @@ export const Form = ({ props = [], button }) => {
     }, {})
   );
 
-  // Keep this local state, as requested.
+  // Store validation errors.
+  const [errors, setErrors] = React.useState({});
+
+  // Show or hide password.
   const [showPassword, setShowPassword] = React.useState(false);
 
-  // Update the value of the input that the user changes.
+  // Update input values.
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -35,11 +39,26 @@ export const Form = ({ props = [], button }) => {
       ...prev,
       [name]: value,
     }));
+
+    // Clear the error for the field being edited.
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
-  // Submit signup or login data.
+  // Validate and submit the form.
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const validationErrors = validateForm(form, isSignup);
+
+    setErrors(validationErrors);
+
+    // Stop if validation errors exist.
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
 
     try {
       if (isSignup) {
@@ -48,12 +67,11 @@ export const Form = ({ props = [], button }) => {
         await dispatch(loginUser(form)).unwrap();
       }
     } catch (error) {
-      // The rejected Redux action updates isError and message.
       console.error("Request failed:", error);
     }
   };
 
-  // Derive success from the Redux state.
+  // Determine whether Redux is showing a success message.
   const isSuccess = Boolean(message) && !isError;
 
   return (
@@ -114,7 +132,7 @@ export const Form = ({ props = [], button }) => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           {props.map((field) => (
             <div key={field.id}>
               <label
@@ -130,8 +148,15 @@ export const Form = ({ props = [], button }) => {
                   name={field.name}
                   value={form[field.name] ?? ""}
                   onChange={handleChange}
-                  required
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-700 outline-none transition hover:border-indigo-300 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                  aria-invalid={Boolean(errors[field.name])}
+                  aria-describedby={
+                    errors[field.name] ? `${field.name}-error` : undefined
+                  }
+                  className={`w-full rounded-xl border bg-slate-50 px-4 py-3.5 text-sm text-slate-700 outline-none transition focus:bg-white focus:ring-4 ${
+                    errors[field.name]
+                      ? "border-rose-500 focus:border-rose-500 focus:ring-rose-50"
+                      : "border-slate-200 hover:border-indigo-300 focus:border-indigo-500 focus:ring-indigo-50"
+                  }`}
                 >
                   <option value="" disabled>
                     Select {field.name}
@@ -158,7 +183,6 @@ export const Form = ({ props = [], button }) => {
                     }
                     value={form[field.name] ?? ""}
                     onChange={handleChange}
-                    required
                     minLength={field.name === "password" ? 8 : undefined}
                     autoComplete={
                       field.name === "password"
@@ -175,8 +199,16 @@ export const Form = ({ props = [], button }) => {
                                 ? "bday"
                                 : "on"
                     }
-                    className={`w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 hover:border-indigo-300 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50 ${
+                    aria-invalid={Boolean(errors[field.name])}
+                    aria-describedby={
+                      errors[field.name] ? `${field.name}-error` : undefined
+                    }
+                    className={`w-full rounded-xl border bg-slate-50 px-4 py-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:bg-white focus:ring-4 ${
                       field.name === "password" ? "pr-16" : ""
+                    } ${
+                      errors[field.name]
+                        ? "border-rose-500 focus:border-rose-500 focus:ring-rose-50"
+                        : "border-slate-200 hover:border-indigo-300 focus:border-indigo-500 focus:ring-indigo-50"
                     }`}
                   />
 
@@ -191,6 +223,17 @@ export const Form = ({ props = [], button }) => {
                     </button>
                   )}
                 </div>
+              )}
+
+              {/* Field validation error */}
+              {errors[field.name] && (
+                <p
+                  id={`${field.name}-error`}
+                  role="alert"
+                  className="mt-1.5 text-sm text-rose-600"
+                >
+                  {errors[field.name]}
+                </p>
               )}
             </div>
           ))}
@@ -209,8 +252,6 @@ export const Form = ({ props = [], button }) => {
               <button
                 type="button"
                 onClick={() => {
-                  // Your Redux slice can be updated to handle this message
-                  // if you want to manage it entirely through Redux.
                   console.info("Password reset requested");
                 }}
                 className="font-semibold text-indigo-600 hover:text-indigo-800"
@@ -220,7 +261,7 @@ export const Form = ({ props = [], button }) => {
             </div>
           )}
 
-          {/* Status message from Redux */}
+          {/* Redux status message */}
           {message && (
             <div
               role="status"
@@ -268,6 +309,7 @@ export const Form = ({ props = [], button }) => {
           <div className="h-px flex-1 bg-slate-200" />
         </div>
 
+        {/* Switch between login and signup */}
         <p className="mt-6 text-center text-sm text-slate-500">
           {isSignup ? "Already have an account?" : "New to TeamFlow?"}{" "}
           <Link
