@@ -32,6 +32,8 @@ export const AllRoutes = () => {
         </Route>
       </Route>
 
+      {/* all admin route's */}
+
       {/* Unknown routes */}
       <Route path="*" element={<ErrorPage />} />
     </Routes>
