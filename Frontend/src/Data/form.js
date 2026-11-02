@@ -1,11 +1,5 @@
 export const login = [
   {
-    id: 1,
-    name: "name",
-    type: "text",
-    placeholder: "Name",
-  },
-  {
     id: 2,
     name: "email",
     type: "email",

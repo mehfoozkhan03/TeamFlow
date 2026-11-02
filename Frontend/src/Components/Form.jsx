@@ -12,7 +12,7 @@ export const Form = ({ props = [], button }) => {
   // Check whether the current page is signup.
   const isSignup = location.pathname.toLowerCase().includes("signup");
 
-  // Redux authentication state.
+  // Get authentication state from Redux.
   const { isError, isLoading, message } = useSelector(
     (store) => store.user
   );
@@ -55,7 +55,7 @@ export const Form = ({ props = [], button }) => {
 
     setErrors(validationErrors);
 
-    // Stop if validation errors exist.
+    // Stop submission if validation errors exist.
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
@@ -67,6 +67,7 @@ export const Form = ({ props = [], button }) => {
         await dispatch(loginUser(form)).unwrap();
       }
     } catch (error) {
+      // Redux handles the error state and message.
       console.error("Request failed:", error);
     }
   };
@@ -107,6 +108,7 @@ export const Form = ({ props = [], button }) => {
             <span className="block text-xl font-extrabold tracking-tight text-slate-900">
               TeamFlow
             </span>
+
             <span className="text-xs font-medium text-slate-500">
               Your team's workspace
             </span>
@@ -148,9 +150,12 @@ export const Form = ({ props = [], button }) => {
                   name={field.name}
                   value={form[field.name] ?? ""}
                   onChange={handleChange}
+                  required
                   aria-invalid={Boolean(errors[field.name])}
                   aria-describedby={
-                    errors[field.name] ? `${field.name}-error` : undefined
+                    errors[field.name]
+                      ? `${field.name}-error`
+                      : undefined
                   }
                   className={`w-full rounded-xl border bg-slate-50 px-4 py-3.5 text-sm text-slate-700 outline-none transition focus:bg-white focus:ring-4 ${
                     errors[field.name]
@@ -183,7 +188,10 @@ export const Form = ({ props = [], button }) => {
                     }
                     value={form[field.name] ?? ""}
                     onChange={handleChange}
-                    minLength={field.name === "password" ? 8 : undefined}
+                    required
+                    minLength={
+                      field.name === "password" ? 8 : undefined
+                    }
                     autoComplete={
                       field.name === "password"
                         ? isSignup
@@ -201,7 +209,9 @@ export const Form = ({ props = [], button }) => {
                     }
                     aria-invalid={Boolean(errors[field.name])}
                     aria-describedby={
-                      errors[field.name] ? `${field.name}-error` : undefined
+                      errors[field.name]
+                        ? `${field.name}-error`
+                        : undefined
                     }
                     className={`w-full rounded-xl border bg-slate-50 px-4 py-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:bg-white focus:ring-4 ${
                       field.name === "password" ? "pr-16" : ""
@@ -216,7 +226,9 @@ export const Form = ({ props = [], button }) => {
                   {field.name === "password" && (
                     <button
                       type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
+                      onClick={() =>
+                        setShowPassword((prev) => !prev)
+                      }
                       className="absolute inset-y-0 right-0 px-4 text-xs font-semibold text-slate-500 transition hover:text-indigo-600"
                     >
                       {showPassword ? "Hide" : "Show"}
@@ -237,29 +249,6 @@ export const Form = ({ props = [], button }) => {
               )}
             </div>
           ))}
-
-          {/* Login helper */}
-          {!isSignup && (
-            <div className="flex items-center justify-between gap-3 text-sm">
-              <label className="flex items-center gap-2 text-slate-600">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-slate-300 accent-indigo-600"
-                />
-                Remember me
-              </label>
-
-              <button
-                type="button"
-                onClick={() => {
-                  console.info("Password reset requested");
-                }}
-                className="font-semibold text-indigo-600 hover:text-indigo-800"
-              >
-                Forgot password?
-              </button>
-            </div>
-          )}
 
           {/* Redux status message */}
           {message && (
@@ -305,13 +294,17 @@ export const Form = ({ props = [], button }) => {
         {/* Footer divider */}
         <div className="mt-7 flex items-center gap-4">
           <div className="h-px flex-1 bg-slate-200" />
-          <span className="text-xs font-medium text-slate-400">TEAMFLOW</span>
+          <span className="text-xs font-medium text-slate-400">
+            TEAMFLOW
+          </span>
           <div className="h-px flex-1 bg-slate-200" />
         </div>
 
         {/* Switch between login and signup */}
         <p className="mt-6 text-center text-sm text-slate-500">
-          {isSignup ? "Already have an account?" : "New to TeamFlow?"}{" "}
+          {isSignup
+            ? "Already have an account?"
+            : "New to TeamFlow?"}{" "}
           <Link
             to={isSignup ? "/login" : "/signup"}
             className="font-bold text-indigo-600 transition hover:text-indigo-800 hover:underline"
