@@ -109,5 +109,3 @@ export const validateForm = (form, isSignup) => {
 
 // contact Validation
 
-
-
