@@ -35,14 +35,17 @@ TeamFlow — Multi-Tenant Project Management SaaS
     - navbar 
     - routes
     - login & signup 
+    - home
 
 - manish
     - design
     - logo
-
-- sneha
     - about 
     - contact
 
+- sneha
+    
+
 - yasir
-    - home
+
+- Abhishek

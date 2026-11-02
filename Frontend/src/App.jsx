@@ -1,12 +1,11 @@
 import { AllRoutes } from "./Routes/AllRoutes";
 import { Navbar } from "./Components/Navbar";
 
-
 export const App = () => {
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
   return <AllRoutes />;
 };
-=======
+=========
   return (
     <>
     {/* <Navbar/> */}
@@ -14,4 +13,4 @@ export const App = () => {
     </>
   )
 }
->>>>>>> ffcb6b284961b646f87ccc37b41d3bcd156fe045
+>>>>>>>>> Temporary merge branch 2
