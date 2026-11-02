@@ -71,9 +71,10 @@ const Login = async (req, res) => {
         msg: "JWT configuration error",
       });
     }
-    console.log("JWT key exists:", Boolean(process.env.privateKey));
+    // console.log("JWT key exists:", Boolean(process.env.privateKey));
     const token = jwt.sign(
       {
+        // payload
         userId: presentUser._id,
         email: presentUser.email,
       },
@@ -81,10 +82,23 @@ const Login = async (req, res) => {
       { expiresIn: "1d" },
     );
 
-    return res.status(200).send({
-      msg: "Login successful",
-      token,
-    });
+   res
+      .cookie("token", token, {
+        httpOnly: false,
+        secure: false,
+        sameSite: "Lax", // None | Lax
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        // path: "/",
+      })
+      .status(200)
+      .json({
+        msg: "Login successful",
+        user: {
+          id: presentUser._id,
+          email: presentUser.email,
+          token
+        },
+      });
   } catch (error) {
     console.error("Login error:", error.message);
 

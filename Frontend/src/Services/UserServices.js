@@ -10,6 +10,8 @@ const userAuthServices = {
   // Login
   async login(data) {
     const response = await ApiCall.post("/user/login", data);
+    console.log("🚀 ~ response:userAuthServices", response);
+
     return response.data;
   },
 

@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+require("dotenv").config({
+  path:".env.production"
+});
 
 const protect = (req, res, next) => {
   try {
