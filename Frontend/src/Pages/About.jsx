@@ -1,70 +1,45 @@
 
-import {
-  FaUsers,
-  FaBullseye,
-  FaEye,
-  FaLightbulb,
-  FaHandshake,
-  FaChartLine,
-  FaArrowRight,
-  FaCheckCircle,
-} from "react-icons/fa";
 import { Link } from "react-router-dom";
+import {features,values} from "../Data/Features";
+
+import { FaUsers, FaBullseye, FaChartLine, FaEye, FaArrowRight, FaCheckCircle } from "react-icons/fa";
 
 // About page
 export const About = () => {
   // Features displayed on the page
-  const features = [
-    {
-      icon: <FaUsers />,
-      title: "Team Collaboration",
-      description:
-        "Bring your team together and help everyone stay aligned with shared goals and responsibilities.",
-      color: "bg-purple-100 text-purple-600",
-    },
-    {
-      icon: <FaBullseye />,
-      title: "Clear Goals",
-      description:
-        "Keep priorities clear and make it easier for your team to focus on what matters most.",
-      color: "bg-blue-100 text-blue-600",
-    },
-    {
-      icon: <FaChartLine />,
-      title: "Track Progress",
-      description:
-        "Get a clearer picture of your team's progress and identify tasks that need attention.",
-      color: "bg-green-100 text-green-600",
-    },
-  ];
+  // const features = [
+  //   {
+  //     icon: <FaUsers />,
+  //     title: "Team Collaboration",
+  //     description:
+  //       "Bring your team together and help everyone stay aligned with shared goals and responsibilities.",
+  //     color: "bg-purple-100 text-purple-600",
+  //   },
+  //   {
+  //     icon: <FaBullseye />,
+  //     title: "Clear Goals",
+  //     description:
+  //       "Keep priorities clear and make it easier for your team to focus on what matters most.",
+  //     color: "bg-blue-100 text-blue-600",
+  //   },
+  //   {
+  //     icon: <FaChartLine />,
+  //     title: "Track Progress",
+  //     description:
+  //       "Get a clearer picture of your team's progress and identify tasks that need attention.",
+  //     color: "bg-green-100 text-green-600",
+  //   },
+  // ];
 
-  // Company values
-  const values = [
-    {
-      icon: <FaLightbulb />,
-      title: "Simplicity",
-      description:
-        "We believe managing work should feel simple, clear, and stress-free.",
-    },
-    {
-      icon: <FaHandshake />,
-      title: "Collaboration",
-      description:
-        "Great results happen when people communicate and work toward shared goals.",
-    },
-    {
-      icon: <FaCheckCircle />,
-      title: "Transparency",
-      description:
-        "Clear priorities and responsibilities help teams work with confidence.",
-    },
-  ];
+
+
+  
 
   return (
     <main className="min-h-screen overflow-hidden bg-white text-gray-800">
 
       {/* HERO SECTION */}
-      <section className="relative bg-gradient-to-br from-violet-50 via-white to-indigo-50 px-4 py-20 sm:px-6 lg:py-28">
+      <section className="relative bg-linear-to-br from-violet-50 via-white to-indigo-50 px-4 py-20 sm:px-6 lg:py-28">
         {/* Decorative circles */}
         <div className="pointer-events-none absolute -left-20 top-10 h-64 w-64 rounded-full bg-purple-200/30 blur-3xl" />
         <div className="pointer-events-none absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-indigo-200/30 blur-3xl" />
@@ -80,7 +55,7 @@ export const About = () => {
 
             <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
               Great teams do
-              <span className="block bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="block bg-linear-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
                 great things together.
               </span>
             </h1>
@@ -111,7 +86,7 @@ export const About = () => {
 
           {/* Hero illustration */}
           <div className="relative mx-auto w-full max-w-xl">
-            <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-r from-purple-200 to-indigo-200 opacity-50 blur-2xl" />
+            <div className="absolute -inset-4 rounded-4xl bg-linear-to-r from-purple-200 to-indigo-200 opacity-50 blur-2xl" />
 
             <div className="relative rounded-3xl border border-purple-100 bg-white p-5 shadow-2xl shadow-purple-100 sm:p-8">
               {/* Dashboard header */}
@@ -157,7 +132,7 @@ export const About = () => {
                 </div>
 
                 <div className="mt-5 h-3 overflow-hidden rounded-full bg-purple-200">
-                  <div className="h-full w-3/4 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600" />
+                  <div className="h-full w-3/4 rounded-full bg-linear-to-r from-purple-600 to-indigo-600" />
                 </div>
                 <p className="mt-2 text-xs text-gray-500">
                   Illustrative progress indicator
@@ -298,6 +273,7 @@ export const About = () => {
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {features.map((feature, index) => (
+              
               <div
                 key={index}
                 className="group rounded-3xl border border-gray-100 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-2 hover:border-purple-200 hover:shadow-xl"
@@ -305,7 +281,7 @@ export const About = () => {
                 <div
                   className={`flex h-14 w-14 items-center justify-center rounded-2xl text-2xl ${feature.color}`}
                 >
-                  {feature.icon}
+                  <feature.Icon />20
                 </div>
 
                 <h3 className="mt-6 text-xl font-bold text-gray-900">

@@ -1,9 +1,9 @@
 import axios from "axios";
 
 export const ApiCall = axios.create({
-  baseURL: import.meta.env.API,
+  baseURL: import.meta.env.VITE_API,
+  withCredentials: true,
 });
-
 /* 
 all data http://localhost:7000
 
