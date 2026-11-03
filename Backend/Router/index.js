@@ -1,37 +1,37 @@
 
 const router = require("express").Router();
 
-// User routes
-router.use("/users", require("./users.routes").UserRoutes);
+// Users
+router.use("/users", require("./User.routes").UserRoutes);
 
-// Organization routes
-router.use("/organizations", require("./organizations.routes"));
+// Organizations
+router.use("/organizations", require("./organization.routes"));
 
-// Organization member routes
+// Organization members
 router.use("/", require("./organizationMembers.routes"));
 
-// Project routes
-router.use("/", require("./projects.routes"));
+// Projects
+router.use("/", require("./project.routes"));
 
-// Task routes
-router.use("/", require("./tasks.routes"));
+// Tasks
+router.use("/", require("./task.routes"));
 
-// Comment routes
-router.use("/", require("./comments.routes"));
+// Comments
+router.use("/", require("./comment.routes"));
 
-// Notification routes
-router.use("/notifications", require("./notifications.routes"));
+// Activities
+router.use("/", require("./activity.routes"));
 
-// Activity routes
-router.use("/", require("./activities.routes"));
+// Notifications
+router.use("/notifications", require("./notification.routes"));
 
-// Plan routes
-router.use("/plans", require("./plans.routes"));
+// Plans
+router.use("/plans", require("./plan.routes"));
 
-// Subscription routes
-router.use("/", require("./subscriptions.routes"));
+// Subscriptions
+router.use("/", require("./subscription.routes"));
 
-// Invitation routes
-router.use("/", require("./invitations.routes"));
+// Invitations
+router.use("/", require("./invitation.routes"));
 
 module.exports = router;

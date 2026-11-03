@@ -1,7 +1,7 @@
 
 const router = require("express").Router();
 
-const c = require("../Controller/Invitations.Controller");
+const c = require("../Controller/invitations.controller");
 const { protect } = require("../Middleware/AuthMiddleware");
 
 // Create an organization invitation

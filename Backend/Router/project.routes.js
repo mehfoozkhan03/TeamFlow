@@ -1,7 +1,7 @@
 
 const router = require("express").Router();
 
-const c = require("../Controller/Projects.Controller");
+const c = require("../Controller/projects.controller");
 const { protect } = require("../Middleware/AuthMiddleware");
 
 // Create a project

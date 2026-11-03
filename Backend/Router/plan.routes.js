@@ -1,7 +1,7 @@
 
 const router = require("express").Router();
 
-const c = require("../Controller/Plans.Controller");
+const c = require("../Controller/plans.controller");
 const { protect } = require("../Middleware/AuthMiddleware");
 
 // Public routes: List and view active plans

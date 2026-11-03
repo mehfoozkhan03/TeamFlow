@@ -1,43 +1,72 @@
+
 const express = require("express");
 const cors = require("cors");
 const dns = require("dns");
-const cookies_parser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 
-// Configure DNS before importing the database module
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-require("dotenv").config({ path: ".env.production" });
+require("dotenv").config({
+  path: ".env.production",
+});
 
-const { UserRoutes } = require("./Router/User.routes");
 const { Connection } = require("./Config/db");
+const apiRoutes = require("./Router/index");
 
 const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
-  }),
+  })
 );
 
-app.use(express.json());
-app.use(cookies_parser());
+app.use(express.json({ limit: "1mb" }));
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
-  res.send("this is server page data????");
+  res.status(200).json({
+    success: true,
+    message: "TeamFlow API is running",
+  });
 });
 
-app.use("/user", UserRoutes);
+// Mount all API routes
+app.use("/api", apiRoutes);
 
-const PORT = process.env.PORT || process.env.Port || 7000;
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  res.status(err.status || 500).json({
+    success: false,
+    message: "Internal server error",
+  });
+});
+
+const PORT = process.env.PORT || 7000;
 
 async function startServer() {
   try {
     await Connection;
-    console.log("DB connected....");
+
+    console.log("MongoDB connected");
 
     app.listen(PORT, () => {
-      console.log(`Server started....${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);

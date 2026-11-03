@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const c = require("../Controller/Activities.Controller");
+const c = require("../Controller/activities.Controller");
 const { protect } = require("../Middleware/AuthMiddleware");
 
 // Get organization activities

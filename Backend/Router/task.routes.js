@@ -1,7 +1,7 @@
 
 const router = require("express").Router();
 
-const c = require("../Controller/Tasks.Controller");
+const c = require("../Controller/tasks.controller");
 const { protect } = require("../Middleware/AuthMiddleware");
 
 // Create task

@@ -1,7 +1,7 @@
 
 const router = require("express").Router();
 
-const c = require("../Controller/Comments.Controller");
+const c = require("../Controller/comments.controller");
 const { protect } = require("../Middleware/AuthMiddleware");
 
 // Create a comment

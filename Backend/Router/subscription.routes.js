@@ -1,7 +1,7 @@
 
 const router = require("express").Router();
 
-const c = require("../Controller/Subscriptions.Controller");
+const c = require("../Controller/subscriptions.controller");
 const { protect } = require("../Middleware/AuthMiddleware");
 
 // Get organization subscription
