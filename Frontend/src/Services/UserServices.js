@@ -3,13 +3,13 @@ import { ApiCall } from "../Api/ApiCall";
 const userAuthServices = {
   // Signup
   async signup(data) {
-    const response = await ApiCall.post("/user/signup", data);
+    const response = await ApiCall.post("/users/signup", data);
     return response.data;
   },
 
   // Login
   async login(data) {
-    const response = await ApiCall.post("/user/login", data);
+    const response = await ApiCall.post("/users/login", data);
     console.log("🚀 ~ response:userAuthServices", response);
 
     return response.data;

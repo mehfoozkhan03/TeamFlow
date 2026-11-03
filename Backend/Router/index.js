@@ -1,10 +1,6 @@
 
 const router = require("express").Router();
-const memberRoutes = require("./organizationMembers.routes");
 
-console.log("Member router type:", typeof memberRoutes);
-
-router.use("/", memberRoutes);
 
 // Users
 router.use("/users", require("./User.routes").UserRoutes);
