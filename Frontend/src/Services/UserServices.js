@@ -3,13 +3,13 @@ import { ApiCall } from "../Api/ApiCall";
 const userAuthServices = {
   // Signup
   async signup(data) {
-    const response = await ApiCall.post("/user/signup", data);
+    const response = await ApiCall.post("/users/signup", data);
     return response.data;
   },
 
   // Login
   async login(data) {
-    const response = await ApiCall.post("/user/login", data);
+    const response = await ApiCall.post("/users/login", data);
     console.log("🚀 ~ response:userAuthServices", response);
 
     return response.data;
@@ -17,7 +17,7 @@ const userAuthServices = {
 
   // Get logged-in user
   async allUsers() {
-    const response = await ApiCall.get("/user/me");
+    const response = await ApiCall.get("/users/me");
     return response.data;
   },
 };
