@@ -59,6 +59,10 @@ export const Navbar = () => {
             <NavLink to="/contact" className={navLinkClass}>
               Contact
             </NavLink>
+
+            <NavLink to="/settings" className={navLinkClass}>
+              Settings
+            </NavLink>
           </div>
 
           {/* Desktop action buttons */}
