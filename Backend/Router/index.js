@@ -35,4 +35,9 @@ router.use("/", require("./subscription.routes"));
 // Invitations
 router.use("/", require("./invitation.routes"));
 
+router.use("/chatbot", require("./chatbotRoutes"));
+console.log("Chatbot routes registered");
+
+
+
 module.exports = router;

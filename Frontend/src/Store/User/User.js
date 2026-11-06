@@ -1,8 +1,19 @@
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
 import { userAuthServices as userAuth } from "../../Services/UserServices";
+import { getToken } from "../../Services/authUtils";
 
-// ========== SIGNUP THUNK ========== //
+// ================= INITIAL STATE ================= //
+
+const initialState = {
+  user: null,
+  isAuth: Boolean(getToken()),
+  isLoading: false,
+  isError: false,
+  message: "",
+};
+
+// ================= SIGNUP THUNK ================= //
 
 export const signupUser = createAsyncThunk(
   "user/signupUser",
@@ -12,41 +23,33 @@ export const signupUser = createAsyncThunk(
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || error.message || "Signup failed",
+        error.response?.data?.message ||
+          error.message ||
+          "Signup failed"
       );
     }
-  },
+  }
 );
 
-// ========== LOGIN THUNK ========== //
+// ================= LOGIN THUNK ================= //
 
 export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (value, { rejectWithValue }) => {
     try {
       const data = await userAuth.login(value);
-      console.log("🚀 ~ data:login", data);
-
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || error.message || "Login failed",
+        error.response?.data?.message ||
+          error.message ||
+          "Login failed"
       );
     }
-  },
+  }
 );
 
-// ========== INITIAL STATE ========== //
-
-const initialState = {
-  user: null,
-  isAuth: document.cookie.split("=")[1] ? true : false ?? false,
-  isLoading: false,
-  isError: false,
-  message: "",
-};
-
-// ========== REDUX SLICE ========== //
+// ================= REDUX SLICE ================= //
 
 const UserReducer = createSlice({
   name: "user",
@@ -56,51 +59,60 @@ const UserReducer = createSlice({
     logout: (state) => {
       state.user = null;
       state.isAuth = false;
+      state.isLoading = false;
+      state.isError = false;
       state.message = "";
+    },
+
+    clearAuthMessage: (state) => {
+      state.message = "";
+      state.isError = false;
     },
   },
 
   extraReducers: (builder) => {
     builder
 
-      // SIGNUP: PENDING
+      // SIGNUP PENDING
       .addCase(signupUser.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.message = "";
       })
 
-      // SIGNUP: SUCCESS
+      // SIGNUP SUCCESS
       .addCase(signupUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload;
+        state.user = action.payload?.user ?? action.payload;
+        state.isError = false;
         state.message = "Signup successful";
       })
 
-      // SIGNUP: ERROR
+      // SIGNUP ERROR
       .addCase(signupUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload || "Signup failed";
       })
 
-      // LOGIN: PENDING
+      // LOGIN PENDING
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.message = "";
       })
 
-      // LOGIN: SUCCESS
+      // LOGIN SUCCESS
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload;
+
+        state.user = action.payload?.user ?? action.payload;
         state.isAuth = true;
         state.isError = false;
         state.message = "Login successful";
       })
 
-      // LOGIN: ERROR
+      // LOGIN ERROR
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
@@ -109,6 +121,8 @@ const UserReducer = createSlice({
   },
 });
 
-export const { logout } = UserReducer.actions;
+// ================= EXPORTS ================= //
+
+export const { logout, clearAuthMessage } = UserReducer.actions;
 
 export default UserReducer.reducer;
