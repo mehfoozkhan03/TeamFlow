@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-
-const { UserModel } = require("../Model/User.model");
-=======
 const { UserModel } = require("../Model/user.model");
->>>>>>> be13fa5a83feb27c88be43725d76d999c683a214
 require("dotenv").config({});
 
 const { genSalt, hash, compare } = require("bcrypt");

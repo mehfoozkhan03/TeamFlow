@@ -1,27 +1,4 @@
 const jwt = require("jsonwebtoken");
-<<<<<<< HEAD
-require("dotenv").config();
-
-// Verify the JWT token before allowing access to protected routes
-const AuthMiddleware = (req, res, next) => {
-  try {
-    const token = req.cookies?.token;
-
-    if (!token) {
-      return res.status(401).json({
-        msg: "Please login first",
-      });
-    }
-
-    const decoded = jwt.verify(token, process.env.privateKey);
-
-    req.user = decoded;
-
-    next();
-  } catch (error) {
-    return res.status(401).json({
-      msg: "Invalid or expired token. Please login again.",
-=======
 require("dotenv").config({
   path:".env.production"
 });
@@ -84,13 +61,8 @@ const protect = (req, res, next) => {
     return res.status(500).json({
       success: false,
       msg: "Authentication failed",
->>>>>>> be13fa5a83feb27c88be43725d76d999c683a214
     });
   }
 };
 
-<<<<<<< HEAD
-module.exports = { AuthMiddleware };
-=======
 module.exports = { protect };
->>>>>>> be13fa5a83feb27c88be43725d76d999c683a214

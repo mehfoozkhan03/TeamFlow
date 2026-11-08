@@ -1,11 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { Layout } from "../Components/Layout";
-<<<<<<< HEAD
-import { PrivateRoute } from "../Components/Routes/PrivateRoute";
-=======
 import { PrivateRoute } from "../Components/PrivateRoute";
 import { PublicRoute } from "../Components/PublicRoute";
->>>>>>> be13fa5a83feb27c88be43725d76d999c683a214
 
 import { Home } from "../Pages/Home";
 import { About } from "../Pages/About";
@@ -13,11 +9,7 @@ import { Contact } from "../Pages/Contact";
 import { Login } from "../Pages/Login";
 import { Signup } from "../Pages/Signup";
 import { ErrorPage } from "../Pages/ErrorPage";
-<<<<<<< HEAD
-
-import OverviewDash from "../Components/Admin/OverviewDash";
-=======
->>>>>>> be13fa5a83feb27c88be43725d76d999c683a214
+import UserRoutes from "../Components/User/UserRoutes";
 
 export const AllRoutes = () => {
   return (
@@ -30,15 +22,9 @@ export const AllRoutes = () => {
         </Route>
       </Route>
 
-<<<<<<< HEAD
-      {/* Protect the dashboard route */}
-      <Route element={<PrivateRoute />}>
-        <Route path="/overview" element={<OverviewDash />} />
-      </Route>
-
-=======
       {/* Private routes: only for authenticated users */}
       <Route element={<PrivateRoute />}>
+        <Route path="/user/*" element={<UserRoutes />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
@@ -49,7 +35,6 @@ export const AllRoutes = () => {
       {/* all admin route's */}
 
       {/* Unknown routes */}
->>>>>>> be13fa5a83feb27c88be43725d76d999c683a214
       <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
