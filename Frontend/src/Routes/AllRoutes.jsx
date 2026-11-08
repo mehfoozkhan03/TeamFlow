@@ -11,6 +11,7 @@ import { Contact } from "../Pages/Contact";
 import { Login } from "../Pages/Login";
 import { Signup } from "../Pages/Signup";
 import { Settings } from "../Pages/Settings";
+import { Profile } from "../Pages/Profile";
 import { ErrorPage } from "../Pages/ErrorPage";
 
 export const AllRoutes = () => {
@@ -31,6 +32,7 @@ export const AllRoutes = () => {
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Route>
 
