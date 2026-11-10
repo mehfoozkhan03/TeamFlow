@@ -5,9 +5,11 @@ export const ApiCall = axios.create({
   withCredentials: true,
 });
 /* 
-all data http://localhost:7000
+all data http://localhost:7000/api
 
-login http://localhost:7000/user/login
+login http://localhost:7000/api/user/login
 
-signup http://localhost:7000/user/signup
+signup http://localhost:7000/api/user/signup
+
+all_user http://localhost:7000/api/all
 */

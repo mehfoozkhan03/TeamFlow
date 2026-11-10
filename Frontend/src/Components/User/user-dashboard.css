@@ -1,0 +1,62 @@
+/* Keep these visual fixes scoped to the member dashboard only. */
+.shell > .sidebar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.shell > .sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.shell > .sidebar > .brand,
+.shell > .sidebar > .brand:hover,
+.shell > .sidebar > .brand .teamflow-mark {
+  transform: none;
+}
+
+.shell > .sidebar nav a {
+  transform: none;
+  font-weight: 600;
+  transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .shell > .sidebar nav a:hover {
+    transform: scale(1.025);
+    position: relative;
+    z-index: 1;
+  }
+
+  .shell .task-metric,
+  .shell .project-card,
+  .shell .kanban-card,
+  .shell .member-card,
+  .shell .project-stats article,
+  .shell .deadline-row,
+  .shell .notification-row,
+  .shell .project-row {
+    transition: transform 160ms ease, box-shadow 160ms ease;
+    transform: scale(1);
+    transform-origin: center;
+  }
+
+  .shell .task-metric:hover,
+  .shell .project-card:hover,
+  .shell .kanban-card:hover,
+  .shell .member-card:hover,
+  .shell .project-stats article:hover,
+  .shell .deadline-row:hover,
+  .shell .notification-row:hover,
+  .shell .project-row:hover {
+    transform: scale(1.015);
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 8px 24px rgb(36 25 71 / 9%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell > .sidebar nav a {
+    transition: none;
+  }
+}

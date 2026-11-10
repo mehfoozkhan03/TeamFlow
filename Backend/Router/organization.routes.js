@@ -5,10 +5,10 @@ const c = require("../Controller/organizations.controller");
 const { protect } = require("../Middleware/AuthMiddleware");
 
 // Create organization
-router.post("/", protect, c.createOrganization);
+router.post("/createOrg", protect, c.createOrganization);
 
 // Get my organizations
-router.get("/", protect, c.getMyOrganizations);
+router.get("/getOrg", protect, c.getMyOrganizations);
 
 // Get organization details
 router.get("/:organizationId", protect, c.getOrganizationById);

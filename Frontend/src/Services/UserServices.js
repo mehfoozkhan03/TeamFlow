@@ -17,9 +17,13 @@ const userAuthServices = {
 
   // Get logged-in user
   async allUsers() {
-    const response = await ApiCall.get("/user/me");
+    const response = await ApiCall.get("/users/me");
     return response.data;
   },
 };
 
 export { userAuthServices };
+
+export const calc = (value) => {
+  const ans = value * value;
+};
