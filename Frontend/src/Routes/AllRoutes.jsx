@@ -1,6 +1,4 @@
-
 import { Route, Routes } from "react-router-dom";
-
 import { Layout } from "../Components/Layout";
 import { PrivateRoute } from "../Components/PrivateRoute";
 import { PublicRoute } from "../Components/PublicRoute";
@@ -11,6 +9,7 @@ import { Contact } from "../Pages/Contact";
 import { Login } from "../Pages/Login";
 import { Signup } from "../Pages/Signup";
 import { ErrorPage } from "../Pages/ErrorPage";
+import UserRoutes from "../Components/User/UserRoutes";
 
 export const AllRoutes = () => {
   return (
@@ -25,6 +24,7 @@ export const AllRoutes = () => {
 
       {/* Private routes: only for authenticated users */}
       <Route element={<PrivateRoute />}>
+        <Route path="/user/*" element={<UserRoutes />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
