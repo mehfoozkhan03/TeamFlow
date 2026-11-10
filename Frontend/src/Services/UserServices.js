@@ -2,10 +2,10 @@ import { ApiCall } from "../Api/ApiCall";
 
 const userAuthServices = {
   // Signup
-    async signup(data) {
-      const response = await ApiCall.post("/users/signup", data);
-      return response.data;
-    },
+  async signup(data) {
+    const response = await ApiCall.post("/users/signup", data);
+    return response.data;
+  },
 
   // Login
   async login(data) {

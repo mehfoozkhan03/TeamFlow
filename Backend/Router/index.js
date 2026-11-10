@@ -1,5 +1,9 @@
 
 const router = require("express").Router();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0b3ef3d0df5a464195e662fe9c458487785e5f7d
 
 // Users
 router.use("/users", require("./User.routes").UserRoutes);
@@ -33,5 +37,10 @@ router.use("/", require("./subscription.routes"));
 
 // Invitations
 router.use("/", require("./invitation.routes"));
+
+router.use("/chatbot", require("./chatbotRoutes"));
+console.log("Chatbot routes registered");
+
+
 
 module.exports = router;

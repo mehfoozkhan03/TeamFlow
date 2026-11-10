@@ -1,12 +1,14 @@
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signupUser, loginUser } from "../Store/User/User";
 import { validateForm } from "../utils/validation";
+import { setAuth, getToken } from "../Services/authUtils";
 
 export const Form = ({ props = [], button }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Check whether the current page is signup.
@@ -61,13 +63,42 @@ export const Form = ({ props = [], button }) => {
     }
 
     try {
+      // Signup
       if (isSignup) {
         await dispatch(signupUser(form)).unwrap();
-      } else {
-        await dispatch(loginUser(form)).unwrap();
+        return;
       }
+
+      // Login
+      const result = await dispatch(loginUser(form)).unwrap();
+
+      console.log("Login response:", result);
+
+      // Handle common response structures.
+      const payload = result?.data ?? result;
+
+      const token =
+        payload?.token ||
+        payload?.accessToken ||
+        payload?.access_token ||
+        getToken();
+
+      const user =
+        payload?.user ||
+        payload?.profile ||
+        payload?.data?.user ||
+        null;
+
+      if (!token) {
+        throw new Error("Login token was not returned.");
+      }
+
+      // Save token and user, then notify Navbar.
+      setAuth(token, user);
+
+      // Redirect after login.
+      navigate("/", { replace: true });
     } catch (error) {
-      // Redux handles the error state and message.
       console.error("Request failed:", error);
     }
   };
@@ -87,21 +118,7 @@ export const Form = ({ props = [], button }) => {
         {/* Logo */}
         <Link to="/" className="mb-9 flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-200/60">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="h-6 w-6"
-            >
-              <rect x="3" y="4" width="18" height="16" rx="4" />
-              <path d="M8 9h8M8 13h5" strokeLinecap="round" />
-              <path
-                d="m14 16 2 2 2-2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <img src="/favicon.svg"alt="Logo"className="w-10 h-10 object-contain"/>
           </div>
 
           <div>
