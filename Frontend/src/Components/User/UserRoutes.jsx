@@ -11,6 +11,7 @@ import { Projects } from './pages/Projects';
 import { Settings } from './pages/Settings';
 import { TeamMembers } from './pages/TeamMembers';
 import { Session } from './context/Session';
+import './user-dashboard.css';
 
 function RequireMember({ children }) {
   const { isAuth, user } = useSelector((state) => state.user);

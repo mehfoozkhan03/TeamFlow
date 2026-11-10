@@ -2,7 +2,9 @@ import axios from 'axios';
 
 // Uses the same API base URL and Bearer token as the existing TeamFlow login.
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API,
+  // Keep User dashboard API calls same-origin so localhost:5173/5174 both work
+  // without changing the existing backend CORS configuration.
+  baseURL: '/api',
 });
 
 api.interceptors.request.use((config) => {
@@ -12,7 +14,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export const errorText = error => error.response?.data?.message || error.response?.data?.msg || error.message || 'Something went wrong.';
+export const errorText = error => error.response?.data?.message || error.response?.data?.msg || (error.response?.status === 404 ? 'Dashboard data API is missing on the backend (organization/project/task route).' : error.message) || 'Something went wrong.';
 
 const listFrom = (data, keys) => {
   if (Array.isArray(data)) return data;
