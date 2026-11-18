@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 // Mount all API routes
 app.use("/api", apiRoutes);
 
-app.use("/api/overview", OverviewRoutes);
+// app.use("/api/overview", OverviewRoutes);
 
 // 404 handler
 app.use((req, res) => {
