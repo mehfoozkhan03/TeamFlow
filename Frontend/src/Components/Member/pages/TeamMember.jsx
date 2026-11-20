@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { MessageSquare, MoreHorizontal, Search } from "lucide-react";
 
-import { MemberSidebar } from "../components/Sidebar";
-import { MemberHeader } from "../components/MemberHeader";
+
 
 export const TeamMember = () => {
   const [search, setSearch] = useState("");
@@ -22,10 +21,6 @@ export const TeamMember = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      <MemberSidebar />
-
-      <div className="min-h-screen lg:pl-[244px] xl:pl-[244px]">
-        <MemberHeader pageTitle="Team Members" />
 
         <main className="p-[30px] max-md:p-4">
           <h1 className="text-[30px] font-medium text-slate-900">
@@ -105,6 +100,5 @@ export const TeamMember = () => {
           </section>
         </main>
       </div>
-    </div>
   );
 };

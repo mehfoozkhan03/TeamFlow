@@ -11,8 +11,6 @@ import {
   Search,
 } from "lucide-react";
 
-import { MemberSidebar } from "../components/Sidebar";
-import { MemberHeader } from "../components/MemberHeader";
 
 import { updateTaskStatus } from "../../../Store/Member/Member";
 
@@ -228,11 +226,6 @@ export const MyTasks = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      <MemberSidebar />
-
-      <div className="min-h-screen lg:pl-[244px] xl:pl-[244px]">
-        <MemberHeader pageTitle="My Tasks" />
-
         <main className="p-[30px] max-md:p-4">
           <div className="flex items-end justify-between gap-5 max-md:flex-col max-md:items-start">
             <div>
@@ -474,6 +467,6 @@ export const MyTasks = () => {
           </section>
         </main>
       </div>
-    </div>
+    
   );
 };

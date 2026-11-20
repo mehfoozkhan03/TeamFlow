@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { MemberSidebar } from "../components/Sidebar";
-import { MemberHeader } from "../components/MemberHeader";
+
 
 export const Settings = () => {
   const [settings, setSettings] = useState({ compact: false, motion: false, monday: true });
@@ -14,9 +13,6 @@ export const Settings = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      <MemberSidebar />
-      <div className="min-h-screen lg:pl-[244px] xl:pl-[244px]">
-        <MemberHeader pageTitle="Settings" />
         <main className="p-[30px] max-md:p-4">
           <h1 className="text-[30px] font-medium text-slate-900">Settings</h1>
           <p className="mt-2 text-sm text-slate-500">Personalize how TeamFlow works for you.</p>
@@ -26,6 +22,5 @@ export const Settings = () => {
           </section>
         </main>
       </div>
-    </div>
   );
 };

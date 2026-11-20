@@ -10,8 +10,7 @@ import {
   UserPlus,
 } from "lucide-react";
 
-import { MemberSidebar } from "../components/Sidebar";
-import { MemberHeader } from "../components/MemberHeader";
+
 
 // Sample team activity data using the five updated team members.
 const events = [
@@ -81,10 +80,6 @@ export const Activity = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      <MemberSidebar />
-
-      <div className="min-h-screen lg:pl-[244px] xl:pl-[244px]">
-        <MemberHeader pageTitle="Activity" />
 
         <main className="p-[30px] max-md:p-4">
           <h1 className="text-[30px] font-medium text-slate-900">
@@ -180,6 +175,5 @@ export const Activity = () => {
           </section>
         </main>
       </div>
-    </div>
   );
 };

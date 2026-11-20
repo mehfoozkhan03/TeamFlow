@@ -9,8 +9,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-import { MemberSidebar } from "../components/Sidebar";
-import { MemberHeader } from "../components/MemberHeader";
+
 import { StatisticCard } from "../components/StatisticCard";
 
 const Project = () => {
@@ -83,10 +82,6 @@ const Project = () => {
 
   return (
     <div className="flex min-h-screen bg-slate-50">
-      <MemberSidebar />
-
-      <div className="flex min-w-0 flex-1 flex-col">
-        <MemberHeader pageTitle="Projects" />
 
         <main className="flex-1 p-6">
           <div className="mb-6">
@@ -220,7 +215,6 @@ const Project = () => {
           </div>
         </main>
       </div>
-    </div>
   );
 };
 

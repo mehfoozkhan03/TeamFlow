@@ -10,8 +10,7 @@ import {
   Megaphone,
 } from "lucide-react";
 
-import { MemberSidebar } from "../components/Sidebar";
-import { MemberHeader } from "../components/MemberHeader";
+
 
 import {
   getMemberNotifications,
@@ -60,10 +59,6 @@ export const Notification = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      <MemberSidebar />
-
-      <div className="min-h-screen lg:pl-[244px] xl:pl-[244px]">
-        <MemberHeader pageTitle="Notifications" />
 
         <main className="p-[30px] max-md:p-4">
           <div className="flex items-center justify-between gap-4">
@@ -160,6 +155,5 @@ export const Notification = () => {
           </section>
         </main>
       </div>
-    </div>
   );
 };

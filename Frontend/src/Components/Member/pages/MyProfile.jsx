@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { CalendarDays, Camera, Mail, Pencil, Users } from "lucide-react";
-import { MemberSidebar } from "../components/Sidebar";
-import { MemberHeader } from "../components/MemberHeader";
+
 
 export const MyProfile = () => {
   const [editing, setEditing] = useState(false);
@@ -15,9 +14,8 @@ export const MyProfile = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      <MemberSidebar />
-      <div className="min-h-screen lg:pl-[244px] xl:pl-[244px]">
-        <MemberHeader pageTitle="My Profile" />
+      
+      
         <main className="p-[30px] max-md:p-4">
           <h1 className="text-[30px] font-medium text-slate-900">My Profile</h1>
           <p className="mt-2 text-sm text-slate-500">Manage your personal information and preferences.</p>
@@ -54,6 +52,6 @@ export const MyProfile = () => {
           </div>
         </main>
       </div>
-    </div>
+    
   );
 };

@@ -5,6 +5,8 @@ import { Layout } from "../Components/Layout";
 import { PrivateRoute } from "../Components/PrivateRoute";
 import { PublicRoute } from "../Components/PublicRoute";
 
+import { MemberLayout } from "../Components/Member/MemberLayout";
+
 // Main application pages
 import Overview from "../Pages/Overview";
 import { Home } from "../Pages/Home";
@@ -29,6 +31,7 @@ import { Settings as MemberSettings } from "../Components/Member/pages/Settings"
 export const AllRoutes = () => {
   return (
     <Routes>
+
       {/* Public Routes */}
       <Route element={<PublicRoute />}>
         <Route element={<Layout />}>
@@ -39,6 +42,7 @@ export const AllRoutes = () => {
 
       {/* Protected Routes */}
       <Route element={<PrivateRoute />}>
+
         {/* Main Application Routes */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
@@ -50,27 +54,22 @@ export const AllRoutes = () => {
         </Route>
 
         {/* Member Dashboard Routes */}
-        <Route
-          path="/member/overview"
-          element={<MemberDashboard />}
-        />
-        <Route path="/member/tasks" element={<MyTasks />} />
-        <Route path="/member/projects" element={<Project />} />
-        <Route path="/member/team" element={<TeamMember />} />
-        <Route path="/member/activity" element={<Activity />} />
-        <Route
-          path="/member/notifications"
-          element={<Notification />}
-        />
-        <Route path="/member/profile" element={<MyProfile />} />
-        <Route
-          path="/member/settings"
-          element={<MemberSettings />}
-        />
+        <Route path="/member" element={<MemberLayout />}>
+          <Route path="overview" element={<MemberDashboard />} />
+          <Route path="tasks" element={<MyTasks />} />
+          <Route path="projects" element={<Project />} />
+          <Route path="team" element={<TeamMember />} />
+          <Route path="activity" element={<Activity />} />
+          <Route path="notifications" element={<Notification />} />
+          <Route path="profile" element={<MyProfile />} />
+          <Route path="settings" element={<MemberSettings />} />
+        </Route>
+
       </Route>
 
       {/* Unknown Routes */}
       <Route path="*" element={<ErrorPage />} />
+
     </Routes>
   );
 };
