@@ -44,7 +44,7 @@ export const dashboardConfig = {
         title: "WORKSPACE",
         items: [
           { name: "Overview", path: "overview", icon: LayoutDashboard },
-          { name: "My Tasks", path: "mytasks", icon: ClipboardList },
+          { name: "My Tasks", path: "tasks", icon: ClipboardList },
           { name: "Projects", path: "projects", icon: Folder },
           { name: "Team Members", path: "team", icon: Users },
         ],

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-// import * as icon from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTaskCompletion } from "../Store/Member/Member";
 
 import {
   Users,
@@ -37,6 +38,18 @@ const Overview = () => {
   const [projectName, setProjectName] = useState("");
   const [members, setMembers] = useState([]);
   const [projects, setProjects] = useState([]);
+
+  // Read shared task data from the Redux store.
+  const dispatch = useDispatch();
+  const tasks = useSelector((state) => state.member?.tasks ?? []);
+
+  const completedTasks = tasks.filter(
+    (task) => task.status === "Completed"
+  ).length;
+
+  const overdueTasks = tasks.filter(
+    (task) => task.overdue && task.status !== "Completed"
+  ).length;
 
   const navigation = [
     {
@@ -77,7 +90,7 @@ const Overview = () => {
     },
     {
       title: "Total Tasks",
-      value: 0,
+      value: tasks.length,
       description: "Across all projects",
       icon: ListTodo,
       iconBg: "bg-orange-100",
@@ -85,22 +98,23 @@ const Overview = () => {
     },
     {
       title: "Completed Tasks",
-      value: 0,
-      description: "No completed tasks",
+      value: completedTasks,
+      description: `${completedTasks} tasks completed`,
       icon: CircleCheck,
       iconBg: "bg-emerald-100",
       iconColor: "text-emerald-600",
     },
     {
       title: "Overdue Tasks",
-      value: 0,
-      description: "Nothing overdue",
+      value: overdueTasks,
+      description: overdueTasks === 0 ? "Nothing overdue" : "Needs attention",
       icon: AlertTriangle,
       iconBg: "bg-rose-100",
       iconColor: "text-rose-500",
     },
   ];
 
+  // Calculate onboarding progress from the current workspace data.
   const steps = [
     {
       title: "Team successfully created",
@@ -111,18 +125,26 @@ const Overview = () => {
       title: "Invite team members",
       description: "Share your unique code.",
       action: "Invite Members",
+      completed: members.length > 0,
     },
     {
       title: "Create your first project",
       description: "Define goals and timelines.",
       action: "Create Project",
+      completed: projects.length > 0,
     },
     {
       title: "Assign tasks",
       description: "Give everyone clear ownership.",
       action: "Start now",
+      completed: tasks.length > 0,
     },
   ];
+
+  const completedSteps = steps.filter((step) => step.completed).length;
+  const progressPercentage = Math.round(
+    (completedSteps / steps.length) * 100
+  );
 
   const handleInvite = (e) => {
     e.preventDefault();
@@ -457,18 +479,18 @@ const Overview = () => {
                   Getting started
                 </h2>
                 <p className="mt-1 text-[10px] text-[#8792A5]">
-                  1 of 4 steps complete
+                  {completedSteps} of {steps.length} steps complete
                 </p>
               </div>
 
               <span className="text-[10px] font-bold text-[#7629F6]">
-                25%
+                {progressPercentage}%
               </span>
             </div>
 
             {/* Progress Bar */}
             <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-[#ECEEF2]">
-              <div className="h-full w-1/4 rounded-full bg-[#7629F6]" />
+              <div className="h-full rounded-full bg-[#7629F6] transition-all duration-300" style={{ width: `${progressPercentage}%` }} />
             </div>
 
             {/* Steps */}
@@ -610,20 +632,35 @@ const Overview = () => {
                 </p>
               </div>
 
-              <div className="flex min-h-[250px] flex-col items-center justify-center rounded-2xl border border-[#E9EAF0] bg-white p-6 text-center shadow-sm">
-
-                <div className="relative mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-purple-100 bg-[#F7F1FF] text-[#7629F6]">
-                  <CalendarDays size={25} />
-                  <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-purple-400 ring-2 ring-white" />
-                </div>
-
-                <h3 className="text-sm font-extrabold text-[#172033]">
-                  No upcoming deadlines
-                </h3>
-
-                <p className="mt-2 text-[11px] text-[#8792A5]">
-                  Deadlines will appear here after tasks are created.
-                </p>
+              <div className="min-h-[250px] rounded-2xl border border-[#E9EAF0] bg-white p-4 shadow-sm">
+                {tasks.filter((task) => task.status !== "Completed").length === 0 ? (
+                  <p className="py-10 text-center text-[11px] text-[#8792A5]">
+                    No upcoming deadlines
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {tasks
+                      .filter((task) => task.status !== "Completed")
+                      .map((task) => (
+                        <div
+                          key={task.id}
+                          className="flex items-center justify-between gap-3 border-b border-[#F0F1F5] pb-3 last:border-0"
+                        >
+                          <div className="min-w-0">
+                            <p className="truncate text-[11px] font-bold text-[#273247]">
+                              {task.title}
+                            </p>
+                            <p className="mt-1 text-[9px] text-[#8792A5]">
+                              {task.project}
+                            </p>
+                          </div>
+                          <span className="shrink-0 rounded-lg bg-purple-50 px-2 py-1 text-[9px] font-semibold text-[#7629F6]">
+                            {task.dueDate}
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -643,27 +680,48 @@ const Overview = () => {
                 </p>
               </div>
 
-              <div className="flex min-h-[180px] flex-col items-center justify-center rounded-2xl border border-[#E9EAF0] bg-white p-6 text-center shadow-sm">
-
-                <div className="relative mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-purple-100 bg-[#F7F1FF] text-[#7629F6]">
-                  <CircleCheck size={25} />
-                  <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-purple-400 ring-2 ring-white" />
-                </div>
-
-                <h3 className="text-sm font-extrabold text-[#172033]">
-                  No tasks yet
-                </h3>
-
-                <p className="mt-2 text-[11px] text-[#8792A5]">
-                  Your team's recent tasks will appear here.
-                </p>
-
-                <button
-                  onClick={() => setActivePage("Tasks")}
-                  className="mt-4 text-[10px] font-bold text-[#7629F6] hover:underline"
-                >
-                  Go to Tasks →
-                </button>
+              <div className="min-h-[180px] rounded-2xl border border-[#E9EAF0] bg-white p-4 shadow-sm">
+                {tasks.length === 0 ? (
+                  <div className="py-8 text-center">
+                    <p className="text-[11px] text-[#8792A5]">No tasks yet</p>
+                    <button
+                      onClick={() => setActivePage("Tasks")}
+                      className="mt-3 text-[10px] font-bold text-[#7629F6] hover:underline"
+                    >
+                      Go to Tasks →
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {tasks.map((task) => (
+                      <label
+                        key={task.id}
+                        className="flex cursor-pointer items-center gap-3 border-b border-[#F0F1F5] pb-3 last:border-0"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={task.status === "Completed"}
+                          onChange={() =>
+                            dispatch(toggleTaskCompletion(task.id))
+                          }
+                          className="h-4 w-4 accent-[#7629F6]"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className={`truncate text-[11px] font-bold ${
+                            task.status === "Completed"
+                              ? "text-gray-400 line-through"
+                              : "text-[#273247]"
+                          }`}>
+                            {task.title}
+                          </p>
+                          <p className="mt-1 text-[9px] text-[#8792A5]">
+                            {task.project} · {task.status}
+                          </p>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -943,7 +1001,7 @@ const Overview = () => {
             </form>
           </div>
         </div>
-      )}
+      )}  
 
     </div>
   );
