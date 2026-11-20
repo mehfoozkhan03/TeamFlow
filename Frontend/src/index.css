@@ -26,3 +26,14 @@
   scrollbar-width: thin;
   scrollbar-color: #475569 #0b1020;
 }
+
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
