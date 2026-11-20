@@ -248,8 +248,8 @@ export const Home = () => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-title"
-            className="relative max-h-[90vh] w-full max-w-[540px] overflow-y-auto rounded-[26px] bg-white p-7 shadow-2xl sm:p-9"
-          >
+            className="relative max-h-[90vh] w-full max-w-[540px] overflow-y-auto scrollbar-none rounded-[26px] bg-white p-7 shadow-2xl sm:p-9"
+            >
             {/* Modal Header */}
             <div className="mb-10 flex items-center justify-between">
               <div className="flex items-center gap-2">
