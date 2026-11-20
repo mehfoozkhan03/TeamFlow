@@ -3,46 +3,42 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // Team members shared across Member pages.
 const teamMembers = [
+  { id: 1, name: "Abhishek", initials: "AB", role: "Team Member", responsibility: "Assigned project tasks" },
+  { id: 2, name: "Manish", initials: "MA", role: "Team Member", responsibility: "Assigned project tasks" },
+  { id: 3, name: "Shivam", initials: "SH", role: "Team Member", responsibility: "Assigned project tasks" },
+  { id: 4, name: "Sneha", initials: "SN", role: "Team Member", responsibility: "Assigned project tasks" },
+  { id: 5, name: "Aditya", initials: "AD", role: "Team Member", responsibility: "Assigned project tasks" },
+];
+
+// Project details shared across Member pages.
+const projects = [
   {
     id: 1,
-    name: "Abhishek",
-    initials: "AB",
-    role: "Team Member",
-    responsibility: "Assigned project tasks",
+    name: "TeamFlow Website",
+    description: "A modern collaboration platform for high-performing teams.",
+    deadline: "2026-11-20",
+    tone: "violet",
   },
   {
     id: 2,
-    name: "Manish",
-    initials: "MA",
-    role: "Team Member",
-    responsibility: "Assigned project tasks",
+    name: "Mobile Application",
+    description: "Native mobile experience for task and project management.",
+    deadline: "2026-11-28",
+    tone: "blue",
   },
   {
     id: 3,
-    name: "Shivam",
-    initials: "SH",
-    role: "Team Member",
-    responsibility: "Assigned project tasks",
-  },
-  {
-    id: 4,
-    name: "Sneha",
-    initials: "SN",
-    role: "Team Member",
-    responsibility: "Assigned project tasks",
-  },
-  {
-    id: 5,
-    name: "Aditya",
-    initials: "AD",
-    role: "Team Member",
-    responsibility: "Assigned project tasks",
+    name: "Design System v2",
+    description: "Shared foundations and accessible components for TeamFlow.",
+    deadline: "2026-12-04",
+    tone: "orange",
   },
 ];
 
-// Initial task data shared across Member pages.
+// Initial shared Redux data.
 const initialState = {
   teamMembers,
+  projects,
 
   tasks: [
     {
@@ -146,7 +142,6 @@ export const getMemberNotifications = (tasks) => {
 
     return {
       id: `${task.id}-${task.status}-${isOverdue ? "overdue" : "normal"}`,
-
       title: isOverdue
         ? "Deadline passed"
         : isCompleted
@@ -154,7 +149,6 @@ export const getMemberNotifications = (tasks) => {
         : task.status === "In Progress"
         ? "Task status updated"
         : "Task assigned",
-
       description: isOverdue
         ? `${task.title} assigned to ${task.assignee} is overdue.`
         : isCompleted
@@ -162,11 +156,7 @@ export const getMemberNotifications = (tasks) => {
         : task.status === "In Progress"
         ? `${task.assignee} is working on "${task.title}".`
         : `"${task.title}" is assigned to ${task.assignee}.`,
-
-      time: task.dueDate
-        ? `Due date: ${task.dueDate}`
-        : "Task update",
-
+      time: task.dueDate ? `Due date: ${task.dueDate}` : "Task update",
       type: isOverdue
         ? "deadline"
         : isCompleted

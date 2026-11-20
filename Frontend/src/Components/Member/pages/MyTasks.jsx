@@ -77,7 +77,7 @@ const TaskCard = ({
     priorityColors[task.priority] || "bg-slate-50 text-slate-600";
 
   return (
-    <article className="relative rounded-xl border border-slate-200 bg-white p-4 shadow-[0_2px_8px_rgba(15,23,42,0.03)]">
+    <article className="relative rounded-xl border border-slate-200 bg-white p-4 shadow-[0_2px_8px_rgba(15,23,42,0.03)] transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:scale-105">
       <div className="flex items-center justify-between">
         <span
           className={`rounded-md px-2 py-1 text-[10px] font-semibold ${priorityColor}`}
@@ -85,7 +85,6 @@ const TaskCard = ({
           <span className="mr-1">●</span>
           {task.priority}
         </span>
-
         <button
           onClick={() =>
             setOpenTask(openTask === task.id ? null : task.id)
