@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
   chatbotMessage,
-} = require("../Controller/chatbotController");
+} = require("../Controller/chatbot.controller");
 
 router.post("/message", chatbotMessage);
 
