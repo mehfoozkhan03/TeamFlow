@@ -1,8 +1,10 @@
+
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
   DndContext,
+  DragOverlay,
   PointerSensor,
   KeyboardSensor,
   useSensor,
@@ -13,7 +15,6 @@ import {
   useDroppable,
 } from "@dnd-kit/core";
 
-import { CSS } from "@dnd-kit/utilities";
 
 import {
   CalendarDays,
@@ -25,9 +26,6 @@ import {
   Search,
   GripVertical,
 } from "lucide-react";
-
-import { MemberSidebar } from "../components/Sidebar";
-import { MemberHeader } from "../components/MemberHeader";
 
 import { updateTaskStatus } from "../../../Store/Member/Member";
 
@@ -89,17 +87,28 @@ const priorityColors = {
 };
 
 // ======================================
-// DRAG AND DROP COLLISION DETECTION
+// COLLISION DETECTION
 // ======================================
 
 const collisionDetectionStrategy = (args) => {
-  const pointerCollisions = pointerWithin(args);
+  // Only columns are valid drop targets. This prevents a task card
+  // underneath the pointer from being mistaken for the destination.
+  const columnContainers = args.droppableContainers.filter((container) =>
+    columns.some((column) => column.title === String(container.id))
+  );
+
+  const columnArgs = {
+    ...args,
+    droppableContainers: columnContainers,
+  };
+
+  const pointerCollisions = pointerWithin(columnArgs);
 
   if (pointerCollisions.length > 0) {
     return pointerCollisions;
   }
 
-  return rectIntersection(args);
+  return rectIntersection(columnArgs);
 };
 
 // ======================================
@@ -123,7 +132,6 @@ const TaskCard = ({
     listeners,
     setNodeRef,
     setActivatorNodeRef,
-    transform,
     isDragging,
   } = useDraggable({
     id: String(taskId),
@@ -133,22 +141,14 @@ const TaskCard = ({
     },
   });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    opacity: isDragging ? 0.35 : 1,
-    position: "relative",
-    zIndex: isDragging ? 50 : 1,
-  };
-
   return (
     <article
       ref={setNodeRef}
-      style={style}
       className={`relative rounded-xl border border-slate-200 bg-white p-4 shadow-[0_2px_8px_rgba(15,23,42,0.03)] transition-shadow hover:shadow-md ${
-        isDragging ? "cursor-grabbing" : ""
+        isDragging ? "opacity-30" : ""
       }`}
     >
-      {/* HEADER */}
+      {/* CARD HEADER */}
       <div className="flex items-center justify-between">
 
         <span
@@ -266,7 +266,53 @@ const TaskCard = ({
 };
 
 // ======================================
-// KANBAN DROP COLUMN
+// DRAG OVERLAY PREVIEW
+// ======================================
+
+const TaskDragPreview = ({ task }) => {
+  if (!task) return null;
+
+  const priorityColor =
+    priorityColors[task.priority] ||
+    "bg-slate-50 text-slate-600";
+
+  return (
+    <article className="w-[260px] rotate-1 cursor-grabbing rounded-xl border border-violet-300 bg-white p-4 shadow-2xl">
+      <div className="flex items-center justify-between">
+        <span
+          className={`rounded-md px-2 py-1 text-[10px] font-semibold ${priorityColor}`}
+        >
+          <span className="mr-1">●</span>
+          {task.priority}
+        </span>
+        <GripVertical size={18} className="text-violet-500" />
+      </div>
+
+      <h3 className="mt-3 break-words text-sm font-semibold text-slate-900">
+        {task.title}
+      </h3>
+
+      <p className="mt-2 flex items-center gap-2 text-[10px] text-slate-400">
+        <Folder size={14} />
+        {task.project}
+      </p>
+
+      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
+        <span className="flex items-center gap-2 text-[10px] text-slate-400">
+          <CalendarDays size={14} />
+          {formatDueDate(task.dueDate)}
+        </span>
+
+        <span className="grid h-7 w-7 place-items-center rounded-full bg-indigo-500 text-[9px] font-bold text-white">
+          {task.initials}
+        </span>
+      </div>
+    </article>
+  );
+};
+
+// ======================================
+// KANBAN COLUMN
 // ======================================
 
 const TaskColumn = ({
@@ -276,7 +322,6 @@ const TaskColumn = ({
   setOpenTask,
   updateStatus,
 }) => {
-
   const { setNodeRef, isOver } = useDroppable({
     id: column.title,
     data: {
@@ -293,7 +338,6 @@ const TaskColumn = ({
           : "border-slate-100 bg-[#f8f9fb]"
       }`}
     >
-
       {/* COLUMN HEADER */}
       <div className="mb-3 flex items-center justify-between px-1">
 
@@ -338,12 +382,13 @@ const TaskColumn = ({
 
         {/* EMPTY COLUMN */}
         {columnTasks.length === 0 && (
-          <div className={`flex min-h-[120px] flex-col items-center justify-center rounded-xl border border-dashed text-center ${
-            isOver
-              ? "border-violet-400 bg-violet-100"
-              : "border-slate-300"
-          }`}>
-
+          <div
+            className={`flex min-h-[120px] flex-col items-center justify-center rounded-xl border border-dashed text-center ${
+              isOver
+                ? "border-violet-400 bg-violet-100"
+                : "border-slate-300"
+            }`}
+          >
             <ClipboardList
               size={19}
               className="text-slate-400"
@@ -352,12 +397,10 @@ const TaskColumn = ({
             <p className="mt-2 text-[10px] text-slate-400">
               Drop tasks here
             </p>
-
           </div>
         )}
 
       </div>
-
     </section>
   );
 };
@@ -367,7 +410,6 @@ const TaskColumn = ({
 // ======================================
 
 export const MyTasks = () => {
-
   const dispatch = useDispatch();
 
   // REDUX TASKS
@@ -383,6 +425,7 @@ export const MyTasks = () => {
   const [view, setView] = useState("Board");
   const [deadlineOrder, setDeadlineOrder] = useState("default");
   const [openTask, setOpenTask] = useState(null);
+  const [activeTask, setActiveTask] = useState(null);
 
   // ======================================
   // DND SENSORS
@@ -423,7 +466,6 @@ export const MyTasks = () => {
         task.project === projectFilter
     )
     .sort((a, b) => {
-
       if (deadlineOrder === "early") {
         return (a.dueDate || "").localeCompare(
           b.dueDate || ""
@@ -444,11 +486,10 @@ export const MyTasks = () => {
     });
 
   // ======================================
-  // UPDATE STATUS THROUGH REDUX
+  // UPDATE STATUS
   // ======================================
 
   const updateStatus = (taskId, newStatus) => {
-
     if (!taskId || !newStatus) return;
 
     dispatch(
@@ -466,7 +507,11 @@ export const MyTasks = () => {
   // ======================================
 
   const handleDragStart = ({ active }) => {
-    console.log("Dragging task:", active.id);
+    const selectedTask = tasks.find(
+      (task) => String(getTaskId(task)) === String(active.id)
+    );
+
+    setActiveTask(selectedTask || null);
     setOpenTask(null);
   };
 
@@ -475,48 +520,26 @@ export const MyTasks = () => {
   // ======================================
 
   const handleDragEnd = ({ active, over }) => {
+    setActiveTask(null);
 
-    console.log("Drag ended:", active.id);
-    console.log("Drop target:", over?.id);
+    if (!over) return;
 
-    if (!over) {
-      console.log("No valid drop target");
-      return;
-    }
-
-    // Find task
     const task = tasks.find(
       (item) =>
         String(getTaskId(item)) === String(active.id)
     );
 
-    if (!task) {
-      console.error("Task not found:", active.id);
-      return;
-    }
+    if (!task) return;
 
-    // Get destination
     const newStatus = String(over.id);
 
-    // Validate column
     const validColumn = columns.some(
       (column) => column.title === newStatus
     );
 
-    if (!validColumn) {
-      console.error("Invalid destination:", newStatus);
-      return;
-    }
+    if (!validColumn) return;
 
-    // Prevent unnecessary updates
-    if (task.status === newStatus) {
-      console.log("Task already in this column");
-      return;
-    }
-
-    console.log(
-      `Changing status: ${task.status} -> ${newStatus}`
-    );
+    if (task.status === newStatus) return;
 
     updateStatus(getTaskId(task), newStatus);
   };
@@ -526,7 +549,7 @@ export const MyTasks = () => {
   // ======================================
 
   const handleDragCancel = () => {
-    console.log("Drag cancelled");
+    setActiveTask(null);
   };
 
   // ======================================
@@ -546,287 +569,276 @@ export const MyTasks = () => {
   // ======================================
 
   return (
-    <div className="min-h-screen bg-[#f7f8fc]">
+    <main className="min-h-full w-full min-w-0 bg-[#f7f8fc] p-4 sm:p-6 lg:p-8">
 
-      <MemberSidebar />
+      {/* PAGE HEADER */}
+      <div className="mb-7 flex items-center justify-between gap-5 max-md:flex-col max-md:items-start">
 
-      <div className="min-h-screen lg:pl-[244px] xl:pl-[244px]">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+            My Tasks
+          </h1>
 
-        <MemberHeader pageTitle="My Tasks" />
+          <p className="mt-2 text-sm text-slate-500">
+            View and manage the work assigned to you.
+          </p>
+        </div>
 
-        <main className="p-[30px] max-md:p-4">
+        {/* BOARD / LIST SWITCH */}
+        <div className="flex shrink-0 rounded-xl border border-slate-200 bg-white p-1">
 
-          {/* PAGE HEADER */}
-          <div className="flex items-end justify-between gap-5 max-md:flex-col max-md:items-start">
+          <button
+            type="button"
+            onClick={() => setView("Board")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold ${
+              view === "Board"
+                ? "bg-violet-50 text-violet-700"
+                : "text-slate-500 hover:bg-slate-50"
+            }`}
+          >
+            <Columns2 size={17} />
+            Board
+          </button>
 
-            <div>
-              <h1 className="text-[30px] font-medium text-slate-900">
-                My Tasks
-              </h1>
+          <button
+            type="button"
+            onClick={() => setView("List")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold ${
+              view === "List"
+                ? "bg-violet-50 text-violet-700"
+                : "text-slate-500 hover:bg-slate-50"
+            }`}
+          >
+            <List size={17} />
+            List
+          </button>
 
-              <p className="mt-2 text-sm text-slate-500">
-                View and manage the work assigned to you.
-              </p>
-            </div>
+        </div>
+      </div>
 
-            {/* BOARD / LIST SWITCH */}
-            <div className="flex rounded-xl border border-slate-200 bg-white p-1">
+      {/* TASK CONTAINER */}
+      <section className="w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white">
 
-              <button
-                type="button"
-                onClick={() => setView("Board")}
-                className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold ${
-                  view === "Board"
-                    ? "bg-violet-50 text-violet-700"
-                    : "text-slate-500 hover:bg-slate-50"
-                }`}
-              >
-                <Columns2 size={17} />
-                Board
-              </button>
+        {/* SEARCH AND FILTERS */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 p-4 lg:p-5">
 
-              <button
-                type="button"
-                onClick={() => setView("List")}
-                className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold ${
-                  view === "List"
-                    ? "bg-violet-50 text-violet-700"
-                    : "text-slate-500 hover:bg-slate-50"
-                }`}
-              >
-                <List size={17} />
-                List
-              </button>
+          {/* SEARCH */}
+          <div className="flex h-10 min-w-[220px] flex-1 items-center gap-3 rounded-lg border border-slate-200 px-3 text-slate-400">
 
-            </div>
+            <Search size={18} />
+
+            <input
+              value={search}
+              onChange={(event) =>
+                setSearch(event.target.value)
+              }
+              placeholder="Search your tasks..."
+              className="w-full min-w-0 bg-transparent text-xs outline-none"
+            />
 
           </div>
 
-          {/* MAIN SECTION */}
-          <section className="mt-7 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          {/* STATUS */}
+          <select
+            value={statusFilter}
+            onChange={(event) =>
+              setStatusFilter(event.target.value)
+            }
+            className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-600 outline-none"
+          >
+            <option>All statuses</option>
+            <option>To Do</option>
+            <option>In Progress</option>
+            <option>In Review</option>
+            <option>Completed</option>
+          </select>
 
-            {/* SEARCH AND FILTERS */}
-            <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 p-5">
+          {/* PRIORITY */}
+          <select
+            value={priorityFilter}
+            onChange={(event) =>
+              setPriorityFilter(event.target.value)
+            }
+            className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-600 outline-none"
+          >
+            <option>All priorities</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+          </select>
 
-              {/* SEARCH */}
-              <div className="flex h-10 min-w-[220px] flex-1 items-center gap-3 rounded-lg border border-slate-200 px-3 text-slate-400">
+          {/* PROJECT */}
+          <select
+            value={projectFilter}
+            onChange={(event) =>
+              setProjectFilter(event.target.value)
+            }
+            className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-600 outline-none"
+          >
+            <option>All projects</option>
+            <option>TeamFlow Website</option>
+            <option>Mobile Application</option>
+          </select>
 
-                <Search size={18} />
+          {/* DEADLINE */}
+          <button
+            type="button"
+            onClick={changeDeadlineOrder}
+            className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 px-3 text-xs text-slate-600 hover:bg-slate-50"
+          >
+            <CalendarDays size={17} />
+            Deadline
 
-                <input
-                  value={search}
-                  onChange={(event) =>
-                    setSearch(event.target.value)
-                  }
-                  placeholder="Search your tasks..."
-                  className="w-full bg-transparent text-xs outline-none placeholder:text-slate-400"
-                />
+            {deadlineOrder === "early"
+              ? " ↑"
+              : deadlineOrder === "late"
+                ? " ↓"
+                : ""}
+          </button>
 
-              </div>
+        </div>
 
-              {/* STATUS */}
-              <select
-                value={statusFilter}
-                onChange={(event) =>
-                  setStatusFilter(event.target.value)
-                }
-                className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-600 outline-none"
-              >
-                <option>All statuses</option>
-                <option>To Do</option>
-                <option>In Progress</option>
-                <option>In Review</option>
-                <option>Completed</option>
-              </select>
+        {/* TASK COUNT */}
+        <div className="flex items-center justify-between px-5 py-4 text-[11px]">
 
-              {/* PRIORITY */}
-              <select
-                value={priorityFilter}
-                onChange={(event) =>
-                  setPriorityFilter(event.target.value)
-                }
-                className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-600 outline-none"
-              >
-                <option>All priorities</option>
-                <option>High</option>
-                <option>Medium</option>
-                <option>Low</option>
-              </select>
+          <p className="text-slate-400">
+            <span className="font-bold text-slate-900">
+              {filteredTasks.length}
+            </span>{" "}
+            tasks assigned to you
+          </p>
 
-              {/* PROJECT */}
-              <select
-                value={projectFilter}
-                onChange={(event) =>
-                  setProjectFilter(event.target.value)
-                }
-                className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-600 outline-none"
-              >
-                <option>All projects</option>
-                <option>TeamFlow Website</option>
-                <option>Mobile Application</option>
-              </select>
+          <p className="text-slate-400">
+            Last updated just now
+          </p>
 
-              {/* DEADLINE */}
-              <button
-                type="button"
-                onClick={changeDeadlineOrder}
-                className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 px-3 text-xs font-medium text-slate-600 hover:bg-slate-50"
-              >
-                <CalendarDays size={17} />
-                Deadline
+        </div>
 
-                {deadlineOrder === "early"
-                  ? " ↑"
-                  : deadlineOrder === "late"
-                    ? " ↓"
-                    : ""}
-              </button>
+        {/* ==================================
+            BOARD VIEW
+        ================================== */}
 
-            </div>
+        {view === "Board" ? (
 
-            {/* TASK COUNT */}
-            <div className="flex items-center justify-between px-6 py-4 text-[10px]">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={collisionDetectionStrategy}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragCancel={handleDragCancel}
+          >
 
-              <p className="text-slate-400">
-                <span className="font-bold text-slate-900">
-                  {filteredTasks.length}
-                </span>{" "}
-                tasks assigned to you
-              </p>
+            <div className="w-full min-w-0 overflow-x-auto px-4 pb-5 lg:px-5">
 
-              <p className="text-slate-400">
-                Last updated just now
-              </p>
+              <div className="grid min-w-[1050px] grid-cols-4 items-start gap-4">
 
-            </div>
+                {columns.map((column) => {
 
-            {/* ==================================
-                BOARD VIEW
-            ================================== */}
+                  const columnTasks = filteredTasks.filter(
+                    (task) => task.status === column.title
+                  );
 
-            {view === "Board" ? (
-
-              <DndContext
-                sensors={sensors}
-                collisionDetection={collisionDetectionStrategy}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-                onDragCancel={handleDragCancel}
-              >
-
-                <div className="overflow-x-auto px-5 pb-5">
-
-                  <div className="grid min-w-[1050px] grid-cols-4 gap-4">
-
-                    {columns.map((column) => {
-
-                      const columnTasks = filteredTasks.filter(
-                        (task) => task.status === column.title
-                      );
-
-                      return (
-                        <TaskColumn
-                          key={column.title}
-                          column={column}
-                          columnTasks={columnTasks}
-                          openTask={openTask}
-                          setOpenTask={setOpenTask}
-                          updateStatus={updateStatus}
-                        />
-                      );
-                    })}
-
-                  </div>
-
-                </div>
-
-              </DndContext>
-
-            ) : (
-
-              /* ==================================
-                 LIST VIEW
-              ================================== */
-
-              <div className="overflow-x-auto">
-
-                <table className="w-full min-w-[760px] text-left">
-
-                  <thead className="border-y border-slate-100 bg-slate-50 text-[10px] font-semibold uppercase text-slate-400">
-
-                    <tr>
-                      <th className="px-6 py-3">Task</th>
-                      <th className="px-4 py-3">Project</th>
-                      <th className="px-4 py-3">Priority</th>
-                      <th className="px-4 py-3">Deadline</th>
-                      <th className="px-4 py-3">Status</th>
-                    </tr>
-
-                  </thead>
-
-                  <tbody className="divide-y divide-slate-100">
-
-                    {filteredTasks.map((task) => (
-
-                      <tr key={String(getTaskId(task))}>
-
-                        <td className="px-6 py-4 text-xs font-medium text-slate-800">
-                          {task.title}
-                        </td>
-
-                        <td className="px-4 py-4 text-xs text-slate-500">
-                          {task.project}
-                        </td>
-
-                        <td className="px-4 py-4 text-xs text-slate-500">
-                          {task.priority}
-                        </td>
-
-                        <td className="px-4 py-4 text-xs text-slate-500">
-
-                          {formatDueDate(task.dueDate)}
-
-                          {isOverdue(task) && (
-                            <span className="ml-2 font-semibold text-rose-500">
-                              Overdue
-                            </span>
-                          )}
-
-                        </td>
-
-                        <td className="px-4 py-4 text-xs text-slate-500">
-                          {task.status}
-                        </td>
-
-                      </tr>
-
-                    ))}
-
-                    {filteredTasks.length === 0 && (
-                      <tr>
-                        <td
-                          colSpan="5"
-                          className="px-6 py-10 text-center text-xs text-slate-400"
-                        >
-                          No tasks found.
-                        </td>
-                      </tr>
-                    )}
-
-                  </tbody>
-
-                </table>
+                  return (
+                    <TaskColumn
+                      key={column.title}
+                      column={column}
+                      columnTasks={columnTasks}
+                      openTask={openTask}
+                      setOpenTask={setOpenTask}
+                      updateStatus={updateStatus}
+                    />
+                  );
+                })}
 
               </div>
+            </div>
 
-            )}
+            <DragOverlay dropAnimation={null}>
+              {activeTask ? (
+                <TaskDragPreview task={activeTask} />
+              ) : null}
+            </DragOverlay>
 
-          </section>
+          </DndContext>
 
-        </main>
+        ) : (
 
-      </div>
+          /* ==================================
+             LIST VIEW
+          ================================== */
 
-    </div>
+          <div className="w-full overflow-x-auto">
+
+            <table className="w-full min-w-[760px] text-left">
+
+              <thead className="border-y border-slate-100 bg-slate-50 text-[10px] font-semibold uppercase text-slate-400">
+
+                <tr>
+                  <th className="px-6 py-3">Task</th>
+                  <th className="px-4 py-3">Project</th>
+                  <th className="px-4 py-3">Priority</th>
+                  <th className="px-4 py-3">Deadline</th>
+                  <th className="px-4 py-3">Status</th>
+                </tr>
+
+              </thead>
+
+              <tbody className="divide-y divide-slate-100">
+
+                {filteredTasks.map((task) => (
+
+                  <tr key={String(getTaskId(task))}>
+
+                    <td className="px-6 py-4 text-xs font-medium text-slate-800">
+                      {task.title}
+                    </td>
+
+                    <td className="px-4 py-4 text-xs text-slate-500">
+                      {task.project}
+                    </td>
+
+                    <td className="px-4 py-4 text-xs text-slate-500">
+                      {task.priority}
+                    </td>
+
+                    <td className="px-4 py-4 text-xs text-slate-500">
+                      {formatDueDate(task.dueDate)}
+
+                      {isOverdue(task) && (
+                        <span className="ml-2 font-semibold text-rose-500">
+                          Overdue
+                        </span>
+                      )}
+                    </td>
+
+                    <td className="px-4 py-4 text-xs text-slate-500">
+                      {task.status}
+                    </td>
+
+                  </tr>
+
+                ))}
+
+                {filteredTasks.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-10 text-center text-xs text-slate-400"
+                    >
+                      No tasks found.
+                    </td>
+                  </tr>
+                )}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        )}
+
+      </section>
+    </main>
   );
 };
