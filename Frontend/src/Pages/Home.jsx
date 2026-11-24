@@ -1,16 +1,44 @@
 
-import { useState, useEffect } from "react";
-import {steps} from "../Data/home"
-import { ArrowRight, CircleCheck, CircleHelp, Link2, MessageSquare, UserRoundPlus, Users, X } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { steps } from "../Data/home";
+import {
+  ArrowRight,
+  ChevronDown,
+  CircleCheck,
+  CircleHelp,
+  Link2,
+  MessageSquare,
+  UserRoundPlus,
+  Users,
+  X,
+} from "lucide-react";
 
 export const Home = () => {
   const [activeModal, setActiveModal] = useState(null);
+
   const [inviteCode, setInviteCode] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [isDesignationOpen, setIsDesignationOpen] = useState(false);
+
+  const dropdownRef = useRef(null);
+
+  const designationOptions = [
+    { value: "frontend_developer", label: "Frontend Developer" },
+    { value: "backend_developer", label: "Backend Developer" },
+    { value: "fullstack_developer", label: "Full Stack Developer" },
+    { value: "ui_ux_designer", label: "UI/UX Designer" },
+    { value: "designer", label: "Graphic Designer" },
+    { value: "tester", label: "Tester / QA" },
+    { value: "project_manager", label: "Project Manager" },
+    { value: "other", label: "Other" },
+  ];
+
   const [teamData, setTeamData] = useState({
     teamName: "",
     description: "",
     projectName: "",
   });
+
   const [error, setError] = useState("");
 
   // Close modal using Escape
@@ -19,8 +47,12 @@ export const Home = () => {
 
     const handleEscape = (e) => {
       if (e.key === "Escape") {
-        setActiveModal(null);
-        setError("");
+        if (isDesignationOpen) {
+          setIsDesignationOpen(false);
+        } else {
+          setActiveModal(null);
+          setError("");
+        }
       }
     };
 
@@ -31,10 +63,30 @@ export const Home = () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
     };
-  }, [activeModal]);
+  }, [activeModal, isDesignationOpen]);
 
+  // Close designation dropdown when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target)
+      ) {
+        setIsDesignationOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  // Close modal
   const closeModal = () => {
     setActiveModal(null);
+    setIsDesignationOpen(false);
     setError("");
   };
 
@@ -54,6 +106,7 @@ export const Home = () => {
 
     // Connect your backend API here
     console.log("Create team:", teamData);
+
     setError("Connect your backend API to create your workspace.");
   };
 
@@ -66,8 +119,19 @@ export const Home = () => {
       return;
     }
 
+    if (!designation) {
+      setError("Please select your designation.");
+      return;
+    }
+
+    const joinData = {
+      inviteCode: inviteCode.trim(),
+      designation,
+    };
+
     // Connect your backend API here
-    console.log("Join team:", inviteCode.trim());
+    console.log("Join team:", joinData);
+
     setError("Connect your backend API to verify this invitation code.");
   };
 
@@ -101,6 +165,7 @@ export const Home = () => {
         {/* Team Cards */}
         <section className="mt-10 flex justify-center">
           <div className="grid w-full max-w-5xl grid-cols-1 gap-5 md:grid-cols-2">
+
             {/* Create Team Card */}
             <div className="group relative overflow-hidden rounded-3xl border border-[#e9defe] bg-[#f7f2ff] p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_35px_rgba(90,50,150,0.12)]">
               <div className="pointer-events-none absolute -right-8 -top-20 h-40 w-40 rounded-full border border-[#eee4fc]" />
@@ -248,12 +313,13 @@ export const Home = () => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-title"
-            className="relative max-h-[90vh] w-full max-w-[540px] overflow-y-auto scrollbar-none rounded-[26px] bg-white p-7 shadow-2xl sm:p-9"
-            >
+            className="relative max-h-[90vh] w-full max-w-[540px] overflow-y-auto rounded-[26px] bg-white p-7 shadow-2xl sm:p-9"
+          >
             {/* Modal Header */}
             <div className="mb-10 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#7c2cf5]" />
+
                 <span className="text-[11px] font-bold tracking-[2px] text-[#7c2cf5]">
                   {activeModal === "create"
                     ? "NEW WORKSPACE"
@@ -302,6 +368,7 @@ export const Home = () => {
                   <label className="mb-2 block text-xs font-semibold text-slate-700">
                     Team Name <span className="text-purple-600">*</span>
                   </label>
+
                   <input
                     type="text"
                     required
@@ -323,6 +390,7 @@ export const Home = () => {
                   <label className="mb-2 block text-xs font-semibold text-slate-700">
                     Team Description
                   </label>
+
                   <textarea
                     rows={3}
                     maxLength={500}
@@ -342,6 +410,7 @@ export const Home = () => {
                   <label className="mb-2 block text-xs font-semibold text-slate-700">
                     Project Name <span className="text-purple-600">*</span>
                   </label>
+
                   <input
                     type="text"
                     required
@@ -377,47 +446,117 @@ export const Home = () => {
 
             {/* JOIN TEAM FORM */}
             {activeModal === "join" && (
-              <form onSubmit={handleJoinTeam} className="mt-9">
-                <label
-                  htmlFor="inviteCode"
-                  className="mb-2 block text-xs font-semibold text-slate-700"
-                >
-                  Team Invitation Code
-                </label>
+              <form onSubmit={handleJoinTeam} className="mt-9 space-y-5">
 
-                <input
-                  id="inviteCode"
-                  type="text"
-                  required
-                  autoComplete="off"
-                  value={inviteCode}
-                  onChange={(e) => {
-                    setInviteCode(e.target.value);
-                    setError("");
-                  }}
-                  placeholder="Enter your invitation code"
-                  className="w-full rounded-[18px] border border-[#e9e7ef] px-4 py-4 text-sm outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
-                />
+                {/* Invitation Code */}
+                <div>
+                  <label
+                    htmlFor="inviteCode"
+                    className="mb-2 block text-xs font-semibold text-slate-700"
+                  >
+                    Team Invitation Code
+                  </label>
 
-                <div className="mt-3 flex items-start gap-2 rounded-[18px] bg-[#f7f8fa] p-4 text-xs leading-5 text-[#7c879a]">
+                  <input
+                    id="inviteCode"
+                    type="text"
+                    required
+                    autoComplete="off"
+                    value={inviteCode}
+                    onChange={(e) => {
+                      setInviteCode(e.target.value);
+                      setError("");
+                    }}
+                    placeholder="Enter your invitation code"
+                    className="w-full rounded-[18px] border border-[#e9e7ef] px-4 py-4 text-sm outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+                  />
+                </div>
+
+                {/* Designation Dropdown */}
+                <div ref={dropdownRef} className="relative">
+                  <label className="mb-2 block text-xs font-semibold text-slate-700">
+                    Your Designation
+                  </label>
+
+                  {/* Dropdown Button */}
+                  <button
+                    type="button"
+                    aria-haspopup="listbox"
+                    aria-expanded={isDesignationOpen}
+                    onClick={() =>
+                      setIsDesignationOpen((prev) => !prev)
+                    }
+                    className="relative flex w-full items-center justify-between rounded-[22px] border border-[#e9e7ef] bg-white px-6 py-5 pr-16 text-left text-base text-slate-700 outline-none transition-all duration-200 hover:border-purple-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+                  >
+                    <span>
+                      {designationOptions.find(
+                        (option) => option.value === designation
+                      )?.label || "Select your designation"}
+                    </span>
+
+                    {/* Arrow */}
+                    <ChevronDown
+                      size={21}
+                      strokeWidth={2.2}
+                      className={`absolute right-5 text-slate-700 transition-transform duration-200 ${
+                        isDesignationOpen ? "rotate-0" : "rotate-180"
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Options */}
+                  {isDesignationOpen && (
+                    <div
+                      role="listbox"
+                      className="absolute left-0 top-full z-50 mt-2 max-h-60 w-full overflow-y-auto rounded-[18px] border border-[#e9e7ef] bg-white p-2 shadow-xl"
+                    >
+                      {designationOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          role="option"
+                          aria-selected={designation === option.value}
+                          onClick={() => {
+                            setDesignation(option.value);
+                            setIsDesignationOpen(false);
+                            setError("");
+                          }}
+                          className={`w-full rounded-xl px-4 py-3 text-left text-sm transition-colors ${
+                            designation === option.value
+                              ? "bg-purple-50 font-semibold text-purple-700"
+                              : "text-slate-700 hover:bg-slate-50"
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Information */}
+                <div className="flex items-start gap-2 rounded-[18px] bg-[#f7f8fa] p-4 text-xs leading-5 text-[#7c879a]">
                   <CircleHelp
                     size={17}
                     className="mt-0.5 shrink-0 text-[#8b3df5]"
                   />
+
                   <p>
                     Ask your Team Leader for the unique invitation code.
+                    Your access role will be assigned automatically when
+                    you join the team.
                   </p>
                 </div>
 
                 {error && (
-                  <p role="alert" className="mt-3 text-xs text-red-500">
+                  <p role="alert" className="text-xs text-red-500">
                     {error}
                   </p>
                 )}
 
                 <button
                   type="submit"
-                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-[18px] bg-[#7c2cf5] px-5 py-4 text-sm font-bold text-white shadow-lg shadow-purple-200 transition hover:bg-[#6920df] active:scale-[0.98]"
+                  className="flex w-full items-center justify-center gap-2 rounded-[18px] bg-[#7c2cf5] px-5 py-4 text-sm font-bold text-white shadow-lg shadow-purple-200 transition hover:bg-[#6920df] active:scale-[0.98]"
                 >
                   Join Team
                   <ArrowRight size={17} />
