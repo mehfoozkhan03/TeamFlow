@@ -14,8 +14,6 @@ export const MyProfile = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      
-      
         <main className="p-[30px] max-md:p-4">
           <h1 className="text-[30px] font-medium text-slate-900">My Profile</h1>
           <p className="mt-2 text-sm text-slate-500">Manage your personal information and preferences.</p>
