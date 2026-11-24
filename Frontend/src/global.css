@@ -1359,3 +1359,354 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =========================================================
+   27. DARK MODE COMPATIBILITY FOR EXISTING TAILWIND CLASSES
+   Many existing pages use fixed Tailwind colors (bg-white,
+   text-black, text-gray-900, etc.). These scoped-by-theme
+   overrides let those pages follow the selected theme without
+   changing their React behavior or removing their existing layout.
+========================================================= */
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+:root[data-theme="dark"] :is(
+  .bg-white,
+  .bg-slate-50,
+  .bg-slate-100,
+  .bg-gray-50,
+  .bg-gray-100,
+  .bg-zinc-50,
+  .bg-zinc-100,
+  .bg-neutral-50,
+  .bg-neutral-100
+) {
+  background-color: var(--surface) !important;
+}
+
+:root[data-theme="dark"] :is(
+  .bg-slate-200,
+  .bg-gray-200,
+  .bg-zinc-200,
+  .bg-neutral-200
+) {
+  background-color: var(--surface-hover) !important;
+}
+
+:root[data-theme="dark"] :is(
+  .text-black,
+  .text-slate-950,
+  .text-slate-900,
+  .text-slate-800,
+  .text-gray-950,
+  .text-gray-900,
+  .text-gray-800,
+  .text-gray-700,
+  .text-zinc-950,
+  .text-zinc-900,
+  .text-neutral-950,
+  .text-neutral-900,
+  .text-blue-950,
+  .text-indigo-950
+) {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme="dark"] :is(
+  .text-slate-700,
+  .text-slate-600,
+  .text-slate-500,
+  .text-gray-600,
+  .text-gray-500,
+  .text-zinc-700,
+  .text-zinc-600,
+  .text-zinc-500,
+  .text-neutral-700,
+  .text-neutral-600,
+  .text-neutral-500
+) {
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme="dark"] :is(
+  .text-slate-400,
+  .text-gray-400,
+  .text-zinc-400,
+  .text-neutral-400
+) {
+  color: var(--text-muted) !important;
+}
+
+:root[data-theme="dark"] :is(
+  .border-slate-100,
+  .border-slate-200,
+  .border-gray-100,
+  .border-gray-200,
+  .border-zinc-100,
+  .border-zinc-200,
+  .border-neutral-100,
+  .border-neutral-200
+) {
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="dark"] :is(
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select
+) {
+  color: var(--text-primary);
+  background-color: var(--surface-secondary);
+  border-color: var(--border-strong);
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+/* Keep pastel accent surfaces readable in dark mode. */
+:root[data-theme="dark"] :is(.bg-purple-50, .bg-violet-50, .bg-indigo-50) {
+  background-color: var(--primary-light) !important;
+}
+
+:root[data-theme="dark"] :is(.bg-purple-100, .bg-violet-100, .bg-indigo-100) {
+  background-color: var(--primary-soft) !important;
+}
+
+:root[data-theme="dark"] :is(.text-purple-700, .text-purple-800, .text-violet-700, .text-indigo-700) {
+  color: #C4A5FF !important;
+}
+
+:root[data-theme="dark"] :is(.text-purple-600, .text-violet-600, .text-indigo-600) {
+  color: #B991FF !important;
+}
+
+:root[data-theme="dark"] :is(.bg-blue-50, .bg-sky-50) {
+  background-color: #172B45 !important;
+}
+
+:root[data-theme="dark"] :is(.text-blue-700, .text-sky-700) {
+  color: #93C5FD !important;
+}
+
+:root[data-theme="dark"] :is(.bg-green-50, .bg-emerald-50) {
+  background-color: #173B2B !important;
+}
+
+:root[data-theme="dark"] :is(.text-green-700, .text-emerald-700) {
+  color: #86EFAC !important;
+}
+
+:root[data-theme="dark"] :is(.bg-red-50, .bg-rose-50) {
+  background-color: #452329 !important;
+}
+
+:root[data-theme="dark"] :is(.text-red-700, .text-rose-700) {
+  color: #FCA5A5 !important;
+}
+
+:root[data-theme="dark"] :is(.bg-yellow-50, .bg-amber-50) {
+  background-color: #453719 !important;
+}
+
+:root[data-theme="dark"] :is(.text-yellow-700, .text-amber-700) {
+  color: #FCD34D !important;
+}
+
+/* Common public-page surfaces and cards. */
+:root[data-theme="dark"] main {
+  color: var(--text-primary);
+}
+
+:root[data-theme="dark"] :is(
+  .shadow-xl,
+  .shadow-2xl,
+  .shadow-lg,
+  .shadow-md
+) {
+  --tw-shadow-color: rgb(0 0 0 / 28%);
+}
+
+/* Smooth theme changes without affecting animations or layout. */
+html,
+body,
+#root,
+.theme-page,
+.theme-card,
+.app-layout,
+.app-sidebar,
+.app-navbar,
+.app-content {
+  transition: background-color var(--transition-normal), color var(--transition-normal), border-color var(--transition-normal);
+}
+
+/* =========================================================
+   28. DARK MODE READABILITY PATCH
+   These rules adapt the fixed light-theme utility colors used
+   across older TeamFlow pages without changing brand/status colors.
+========================================================= */
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root {
+  background-color: var(--background) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Neutral Tailwind backgrounds used by public pages and dashboards. */
+:root[data-theme="dark"] :is(
+  [class~="bg-white"],
+  [class~="bg-gray-50"], [class~="bg-gray-100"],
+  [class~="bg-slate-50"], [class~="bg-slate-100"],
+  [class~="bg-zinc-50"], [class~="bg-zinc-100"],
+  [class~="bg-neutral-50"], [class~="bg-neutral-100"]
+) {
+  background-color: var(--surface) !important;
+}
+
+:root[data-theme="dark"] :is(
+  [class~="bg-gray-200"], [class~="bg-slate-200"],
+  [class~="bg-zinc-200"], [class~="bg-neutral-200"]
+) {
+  background-color: var(--surface-secondary) !important;
+}
+
+/* Fixed pale hex backgrounds used in TeamFlow's custom dashboard cards. */
+:root[data-theme="dark"] :is(
+  [class*="bg-[#f7f8fc]"], [class*="bg-[#F7F8FC]"],
+  [class*="bg-[#f8f9fb]"], [class*="bg-[#FBFAFD]"],
+  [class*="bg-[#F9FAFC]"], [class*="bg-[#FAFAFC]"],
+  [class*="bg-[#faf9ff]"], [class*="bg-[#FAF9FF]"],
+  [class*="bg-[#f7f2ff]"], [class*="bg-[#f7f8fa]"],
+  [class*="bg-[#faf7ff]"]
+) {
+  background-color: var(--surface) !important;
+}
+
+:root[data-theme="dark"] :is(
+  [class*="bg-[#F6F0FF]"], [class*="bg-[#F7F1FF]"],
+  [class*="bg-[#F2EAFE]"], [class*="bg-[#f1e7ff]"],
+  [class*="bg-[#F4F1FF]"], [class*="bg-[#F5F3FF]"]
+) {
+  background-color: var(--primary-light) !important;
+}
+
+:root[data-theme="dark"] [class*="bg-[#F3FBF7]"],
+:root[data-theme="dark"] [class*="bg-[#E8F8F1]"] {
+  background-color: var(--success-bg) !important;
+}
+
+:root[data-theme="dark"] [class*="bg-[#FFF7ED]"] {
+  background-color: var(--warning-bg) !important;
+}
+
+/* Neutral text utilities: avoid black or near-black text on dark surfaces. */
+:root[data-theme="dark"] :is(
+  [class~="text-black"], [class~="text-slate-950"],
+  [class~="text-slate-900"], [class~="text-slate-800"],
+  [class~="text-gray-950"], [class~="text-gray-900"],
+  [class~="text-gray-800"], [class~="text-neutral-900"],
+  [class~="text-zinc-900"]
+) {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme="dark"] :is(
+  [class~="text-slate-700"], [class~="text-slate-600"],
+  [class~="text-gray-700"], [class~="text-gray-600"],
+  [class~="text-gray-500"], [class~="text-neutral-700"],
+  [class~="text-neutral-600"], [class~="text-zinc-700"],
+  [class~="text-zinc-600"]
+) {
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme="dark"] :is(
+  [class*="text-[#172033]"], [class*="text-[#273247]"],
+  [class*="text-[#19172b]"], [class*="text-[#25213D]"],
+  [class*="text-[#292044]"], [class*="text-[#7c879a]"],
+  [class*="text-[#46536A]"], [class*="text-[#72778b]"],
+  [class*="text-[#77718F]"], [class*="text-[#9383b3]"],
+  [class*="text-[#8792A5]"], [class*="text-[#A0A7B5]"],
+  [class*="text-[#A3A8B8]"], [class*="text-[#8490A5]"],
+  [class*="text-[#929BAD]"], [class*="text-[#8C80A8]"]
+) {
+  color: var(--text-secondary) !important;
+}
+
+/* Make fixed light borders blend with dark surfaces. */
+:root[data-theme="dark"] :is(
+  [class~="border-gray-100"], [class~="border-gray-200"],
+  [class~="border-gray-300"], [class~="border-slate-100"],
+  [class~="border-slate-200"], [class~="border-slate-300"],
+  [class~="border-zinc-100"], [class~="border-zinc-200"]
+) {
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="dark"] :is(
+  [class*="border-[#E9EAF0]"], [class*="border-[#E9EAF1]"],
+  [class*="border-[#E9E5F1]"], [class*="border-[#E4E5ED]"],
+  [class*="border-[#E5E7EF]"], [class*="border-[#EDF0F4]"],
+  [class*="border-[#E3E1EF]"], [class*="border-[#e9e7ef]"],
+  [class*="border-[#e9defe]"], [class*="border-[#eee4fc]"],
+  [class*="border-[#f0edf5]"], [class*="border-[#f0e9fa]"]
+) {
+  border-color: var(--border) !important;
+}
+
+/* Forms remain readable even when a page has hard-coded light input styles. */
+:root[data-theme="dark"] :is(input, textarea, select) {
+  background-color: var(--surface-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+:root[data-theme="dark"] :is(input, textarea, select)::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+:root[data-theme="dark"] option {
+  background-color: var(--surface);
+  color: var(--text-primary);
+}
+
+/* About page hero uses a light three-colour gradient in light mode. */
+:root[data-theme="dark"] .from-violet-50 {
+  --tw-gradient-from: #19172a var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(25 23 42 / 0) var(--tw-gradient-to-position);
+}
+
+:root[data-theme="dark"] .via-white {
+  --tw-gradient-via: #151824 var(--tw-gradient-via-position);
+}
+
+:root[data-theme="dark"] .to-indigo-50 {
+  --tw-gradient-to: #19172a var(--tw-gradient-to-position);
+}
+
+/* Improve the readability of common dark-on-light hero headings. */
+:root[data-theme="dark"] :is(.text-blue-950, .text-indigo-950, .text-gray-900) {
+  color: var(--text-primary) !important;
+}
+
+/* Keep text-transparent gradient headings transparent. */
+:root[data-theme="dark"] .text-transparent {
+  color: transparent !important;
+}
+
+/* Respect accessible contrast on hover states and menus. */
+:root[data-theme="dark"] :is(.hover\:bg-white:hover, .hover\:bg-gray-50:hover, .hover\:bg-slate-50:hover) {
+  background-color: var(--surface-hover) !important;
+}
+
+:root[data-theme="dark"] :is(.divide-gray-100 > :not([hidden]) ~ :not([hidden]), .divide-slate-100 > :not([hidden]) ~ :not([hidden])) {
+  border-color: var(--border) !important;
+}
