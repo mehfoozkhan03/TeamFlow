@@ -1,5 +1,5 @@
 
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 import { Layout } from "../Components/Layout";
 import { PrivateRoute } from "../Components/PrivateRoute";
@@ -55,6 +55,7 @@ export const AllRoutes = () => {
 
         {/* Member Dashboard Routes */}
         <Route path="/member" element={<MemberLayout />}>
+        <Route index element={<Navigate to="overview" replace />} />
           <Route path="overview" element={<MemberDashboard />} />
           <Route path="tasks" element={<MyTasks />} />
           <Route path="projects" element={<Project />} />
