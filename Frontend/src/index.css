@@ -51,3 +51,114 @@
   width: 0;
   height: 0;
 }
+
+/* =====================================
+   TEAMFLOW DRIVER.JS THEME
+===================================== */
+
+/* Common styles */
+.teamflow-tour {
+  border-radius: 16px !important;
+  padding: 22px !important;
+  max-width: 350px !important;
+  font-family: inherit !important;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.teamflow-tour .driver-popover-title {
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  margin-bottom: 10px !important;
+}
+
+.teamflow-tour .driver-popover-description {
+  font-size: 13px !important;
+  line-height: 1.7 !important;
+}
+
+.teamflow-tour .driver-popover-progress-text {
+  font-size: 11px !important;
+}
+
+.teamflow-tour .driver-popover-navigation-btns {
+  gap: 8px;
+}
+
+.teamflow-tour .driver-popover-next-btn,
+.teamflow-tour .driver-popover-done-btn {
+  background: #7c2cf5 !important;
+  color: #fff !important;
+  border: 1px solid #7c2cf5 !important;
+  border-radius: 9px !important;
+  padding: 8px 15px !important;
+  text-shadow: none !important;
+}
+
+.teamflow-tour .driver-popover-prev-btn {
+  border-radius: 9px !important;
+  padding: 8px 15px !important;
+}
+
+/* =====================================
+   LIGHT MODE
+===================================== */
+
+html[data-theme="light"] .teamflow-tour {
+  background: #ffffff !important;
+  color: #19172b !important;
+  border: 1px solid #eee8f8 !important;
+  box-shadow: 0 15px 45px rgba(30, 20, 50, 0.15) !important;
+}
+
+html[data-theme="light"] .teamflow-tour .driver-popover-title {
+  color: #19172b !important;
+}
+
+html[data-theme="light"] .teamflow-tour .driver-popover-description {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .teamflow-tour .driver-popover-prev-btn {
+  background: #f1f0f5 !important;
+  color: #475569 !important;
+  border: 1px solid #e5e7eb !important;
+  text-shadow: none !important;
+}
+
+/* =====================================
+   DARK MODE
+===================================== */
+
+html[data-theme="dark"] .teamflow-tour {
+  background: #1e1b2e !important;
+  color: #f8fafc !important;
+  border: 1px solid #39314f !important;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.45) !important;
+}
+
+html[data-theme="dark"] .teamflow-tour .driver-popover-title {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .teamflow-tour .driver-popover-description {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .teamflow-tour .driver-popover-progress-text {
+  color: #a78bfa !important;
+}
+
+html[data-theme="dark"] .teamflow-tour .driver-popover-prev-btn {
+  background: #302a43 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #49405e !important;
+  text-shadow: none !important;
+}
+
+html[data-theme="dark"] .driver-popover-close-btn {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .driver-popover-arrow {
+  border-color: #1e1b2e !important;
+}

@@ -1,6 +1,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { steps } from "../Data/home";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 import {
   ArrowRight,
   ChevronDown,
@@ -8,6 +10,7 @@ import {
   CircleHelp,
   Link2,
   MessageSquare,
+  PlayCircle,
   UserRoundPlus,
   Users,
   X,
@@ -40,6 +43,75 @@ export const Home = () => {
   });
 
   const [error, setError] = useState("");
+
+  // Start the TeamFlow onboarding tour
+  const startTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      animate: true,
+      smoothScroll: true,
+      allowClose: true,
+      overlayOpacity: 0.65,
+      popoverClass: "teamflow-tour",
+      nextBtnText: "Next →",
+      prevBtnText: "← Previous",
+      doneBtnText: "Finish",
+      steps: [
+        {
+          element: "body",
+          popover: {
+            title: "Welcome to TeamFlow! 👋",
+            description:
+              "Take a quick tour to learn how to create a workspace or join your existing team.",
+            side: "over",
+            align: "center",
+          },
+        },
+        {
+          element: '[data-tour="create-team"]',
+          popover: {
+            title: "Create Your Team 🚀",
+            description:
+              "Start a new workspace, add your team details, and lead your project.",
+            side: "bottom",
+            align: "center",
+          },
+        },
+        {
+          element: '[data-tour="join-team"]',
+          popover: {
+            title: "Join an Existing Team",
+            description:
+              "Use the invitation code shared by your Team Leader to join a workspace.",
+            side: "bottom",
+            align: "center",
+          },
+        },
+        {
+          element: '[data-tour="how-it-works"]',
+          popover: {
+            title: "How TeamFlow Works",
+            description:
+              "Follow these steps to get started and collaborate with your team.",
+            side: "top",
+            align: "center",
+          },
+        },
+        {
+          element: '[data-tour="create-button"]',
+          popover: {
+            title: "Ready to Get Started?",
+            description:
+              "Select Create Team to open the workspace setup form.",
+            side: "top",
+            align: "center",
+          },
+        },
+      ],
+    });
+
+    driverObj.drive();
+  };
 
   // Close modal using Escape
   useEffect(() => {
@@ -160,6 +232,17 @@ export const Home = () => {
             Create a new team or join an existing one to start
             collaborating, managing projects, and achieving more together.
           </p>
+
+          <div className="mt-7 flex justify-center">
+            <button
+              type="button"
+              onClick={startTour}
+              className="inline-flex items-center gap-2 rounded-xl border border-purple-200 bg-white px-5 py-3 text-sm font-semibold text-purple-700 shadow-sm transition hover:bg-purple-50"
+            >
+              <PlayCircle size={18} />
+              Take a Tour
+            </button>
+          </div>
         </section>
 
         {/* Team Cards */}
@@ -167,7 +250,7 @@ export const Home = () => {
           <div className="grid w-full max-w-5xl grid-cols-1 gap-5 md:grid-cols-2">
 
             {/* Create Team Card */}
-            <div className="group relative overflow-hidden rounded-3xl border border-[#e9defe] bg-[#f7f2ff] p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_35px_rgba(90,50,150,0.12)]">
+            <div data-tour="create-team" className="group relative overflow-hidden rounded-3xl border border-[#e9defe] bg-[#f7f2ff] p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_35px_rgba(90,50,150,0.12)]">
               <div className="pointer-events-none absolute -right-8 -top-20 h-40 w-40 rounded-full border border-[#eee4fc]" />
 
               <div className="relative z-10">
@@ -197,6 +280,7 @@ export const Home = () => {
                   </div>
 
                   <button
+                    data-tour="create-button"
                     type="button"
                     onClick={() => {
                       setActiveModal("create");
@@ -212,7 +296,7 @@ export const Home = () => {
             </div>
 
             {/* Join Team Card */}
-            <div className="group relative overflow-hidden rounded-3xl border border-[#f0edf5] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_35px_rgba(50,40,80,0.10)]">
+            <div data-tour="join-team" className="group relative overflow-hidden rounded-3xl border border-[#f0edf5] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_35px_rgba(50,40,80,0.10)]">
               <div className="pointer-events-none absolute -right-8 -top-20 h-40 w-40 rounded-full border border-[#f0e9fa] bg-[#faf7ff]" />
 
               <div className="relative z-10">
@@ -259,7 +343,7 @@ export const Home = () => {
         </section>
 
         {/* How TeamFlow Works */}
-        <section className="mx-auto mt-10 w-full max-w-5xl border-t border-slate-100 pt-6">
+        <section data-tour="how-it-works" className="mx-auto mt-10 w-full max-w-5xl border-t border-slate-100 pt-6">
           <div className="mb-6 flex flex-wrap items-center gap-4">
             <h2 className="shrink-0 text-sm font-bold text-slate-800">
               How TeamFlow works
@@ -313,7 +397,7 @@ export const Home = () => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-title"
-            className="relative max-h-[90vh] w-full max-w-[540px] overflow-y-auto rounded-[26px] bg-white p-7 shadow-2xl sm:p-9"
+            className="relative max-h-[90vh] w-full max-w-[540px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-[26px] bg-white p-7 shadow-2xl sm:p-9"
           >
             {/* Modal Header */}
             <div className="mb-10 flex items-center justify-between">
