@@ -12,7 +12,7 @@ import {
 
 import { StatisticCard } from "../components/StatisticCard";
 
-const Project = () => {
+export const Project = () => {
   const projects = useSelector((state) => state.member?.projects ?? []);
   const tasks = useSelector((state) => state.member?.tasks ?? []);
 
@@ -218,4 +218,3 @@ const Project = () => {
   );
 };
 
-export default Project;

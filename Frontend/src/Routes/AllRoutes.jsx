@@ -21,7 +21,7 @@ import { ErrorPage } from "../Pages/ErrorPage";
 // Member dashboard pages
 import { MemberDashboard } from "../Components/Member/pages/Overview";
 import { MyTasks } from "../Components/Member/pages/MyTasks";
-import Project from "../Components/Member/pages/Project";
+import {Project} from "../Components/Member/pages/Project";
 import { TeamMember } from "../Components/Member/pages/TeamMember";
 import { Activity } from "../Components/Member/pages/Activity";
 import { Notification } from "../Components/Member/pages/Notification";
