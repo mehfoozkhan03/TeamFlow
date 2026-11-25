@@ -55,8 +55,7 @@ export const Sidebar = ({
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-7 overflow-y-auto px-4 pb-5">
-
+<nav className="sidebar-scrollbar min-h-0 flex-1 space-y-7 overflow-y-auto overscroll-contain px-4 pb-5">
         {config.sections.map((section) => (
           <div key={section.title}>
             <h3 className="mb-3 px-3 text-[10px] font-bold tracking-[1.5px] text-slate-400">

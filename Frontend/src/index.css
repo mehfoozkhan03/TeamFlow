@@ -37,3 +37,15 @@
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+/* Hide sidebar scrollbar while keeping scrolling enabled */
+.sidebar-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar {
+  display: none; 
+  width: 0;
+  height: 0;
+}
